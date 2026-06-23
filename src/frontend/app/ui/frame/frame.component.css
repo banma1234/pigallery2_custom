@@ -65,6 +65,41 @@ ng-icon {
   margin: -0.2em;
 }
 
+/* sidebar toggle button: shows the brand logo at rest, swaps to the
+   sidebar icon on hover; toggles the sidebar at any screen size. */
+.sidebar-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--bs-body-color);
+  cursor: pointer;
+}
+
+.sidebar-toggle-btn .stb-logo {
+  width: 34px;
+  height: 34px;
+  display: block;
+}
+
+.sidebar-toggle-btn .stb-icon {
+  display: none;
+  font-size: 1.7em;
+}
+
+.sidebar-toggle-btn:hover .stb-logo {
+  display: none;
+}
+
+.sidebar-toggle-btn:hover .stb-icon {
+  display: inline-flex;
+  color: var(--pg-accent);
+}
+
 
 a.dropdown-item span.badge, button.dropdown-item span.badge {
   margin-left: -0.8rem;

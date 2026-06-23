@@ -1,0 +1,91 @@
+<ng-container *ngIf="visible">
+  <!-- mobile-only backdrop behind the open sidebar (opened from the navbar) -->
+  <div class="sidebar-backdrop" [class.show]="open" (click)="close()"></div>
+
+  <nav class="sidebar" [class.open]="open" [class.collapsed]="collapsed">
+    <div class="sidebar-header">
+      <a class="sidebar-brand" [routerLink]="['/gallery']"
+         [queryParams]="queryService.getParams()" (click)="close()"
+         aria-label="PiGallery2 for AI">
+        <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sbBrandGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9b87f5"/>
+              <stop offset="1" stop-color="#7c66ef"/>
+            </linearGradient>
+          </defs>
+          <rect x="14" y="14" width="16" height="16" rx="4" fill="url(#sbBrandGrad)"/>
+          <rect x="34" y="14" width="16" height="16" rx="4" fill="url(#sbBrandGrad)" opacity=".5"/>
+          <rect x="14" y="34" width="16" height="16" rx="4" fill="url(#sbBrandGrad)" opacity=".5"/>
+          <rect x="34" y="34" width="16" height="16" rx="4" fill="none" stroke="url(#sbBrandGrad)" stroke-width="2.5"/>
+          <path d="M42 36 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 z" fill="url(#sbBrandGrad)"/>
+        </svg>
+        <span class="brand-name">PiGallery2<span class="brand-for">for</span><span class="brand-ai">AI</span></span>
+      </a>
+      <button class="sidebar-close" type="button" (click)="hide()"
+              aria-label="Close menu" i18n-aria-label>
+        <ng-icon name="tablerLayoutSidebar"></ng-icon>
+      </button>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li *ngIf="isGalleryAvailable()">
+        <a [routerLink]="['/gallery']" [queryParams]="queryService.getParams()"
+           routerLinkActive="active" (click)="close()">
+          <ng-icon name="ionImagesOutline"></ng-icon><span i18n>Photos</span>
+        </a>
+      </li>
+      <li *ngIf="isAlbumsAvailable()">
+        <a [routerLink]="['/albums']" routerLinkActive="active" (click)="close()">
+          <ng-icon name="ionAlbumsOutline"></ng-icon><span i18n>Albums</span>
+        </a>
+      </li>
+      <li *ngIf="isFacesAvailable()">
+        <a [routerLink]="['/faces']" routerLinkActive="active" (click)="close()">
+          <ng-icon name="ionPeopleOutline"></ng-icon><span i18n>Faces</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-section" *ngIf="(favoriteService.favorites | async)?.length">
+      <div class="sidebar-section-title" i18n>Favorites</div>
+      <ul class="sidebar-nav">
+        <li class="sidebar-fav" *ngFor="let fav of favoriteService.favorites | async">
+          <a [routerLink]="['/gallery', fav.directoryPath]"
+             [queryParams]="queryService.getParams()" (click)="close()">
+            <ng-icon class="sidebar-fav-star" name="ionStar"></ng-icon><span>{{ fav.name }}</span>
+          </a>
+          <button class="sidebar-fav-remove" type="button"
+                  (click)="favoriteService.remove(fav.directoryPath)"
+                  aria-label="Remove favorite" i18n-aria-label>
+            <ng-icon name="ionCloseOutline"></ng-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-toggle-row">
+        <span class="sidebar-toggle-label">
+          <ng-icon name="tablerSparkles"></ng-icon><span i18n>AI mode</span>
+        </span>
+        <div class="form-check form-switch m-0">
+          <input class="form-check-input" type="checkbox" role="switch"
+                 [checked]="aiService.enabled | async" (change)="aiService.toggle()"
+                 aria-label="Toggle AI mode" i18n-aria-label>
+        </div>
+      </div>
+      <div class="sidebar-toggle-row" *ngIf="themesEnabled">
+        <span class="sidebar-toggle-label">
+          <ng-icon name="ionMoonOutline"></ng-icon><span i18n>Dark mode</span>
+        </span>
+        <div class="form-check form-switch m-0">
+          <input class="form-check-input" type="checkbox" role="switch"
+                 [checked]="isDark" (change)="toggleTheme()"
+                 aria-label="Toggle dark mode" i18n-aria-label>
+        </div>
+      </div>
+    </div>
+  </nav>
+</ng-container>
