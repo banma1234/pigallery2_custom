@@ -9,6 +9,7 @@ import {SettingsRouter} from './admin/SettingsRouter';
 import {NotificationRouter} from './NotificationRouter';
 import {ErrorRouter} from './ErrorRouter';
 import {AlbumRouter} from './AlbumRouter';
+import {FavoriteFolderRouter} from './FavoriteFolderRouter';
 import {ExtensionRouter} from './admin/ExtensionRouter';
 import {VersionMWs} from '../middlewares/VersionMWs';
 import {OIDCRouter} from './OIDCRouter';
@@ -23,6 +24,7 @@ export class Router {
     ExtensionRouter.route(app);
     OIDCRouter.route(app);
     AlbumRouter.route(app);
+    FavoriteFolderRouter.route(app);
     GalleryRouter.route(app);
     NotificationRouter.route(app);
     PersonRouter.route(app);
