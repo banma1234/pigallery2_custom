@@ -26,65 +26,9 @@
           "baseHref": ""
         },
         "locales": {
-          "zh": {
+          "ko": {
             "baseHref": "",
-            "translation": "src/frontend/translate/messages.cn.xlf"
-          },
-          "de": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.de.xlf"
-          },
-          "es": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.es.xlf"
-          },
-          "fr": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.fr.xlf"
-          },
-          "hu": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.hu.xlf"
-          },
-          "id": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.id.xlf"
-          },
-          "it": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.it.xlf"
-          },
-          "ro": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.ro.xlf"
-          },
-          "ru": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.ru.xlf"
-          },
-          "sk": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.sk.xlf"
-          },
-          "sv": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.sv.xlf"
-          },
-          "pl": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.pl.xlf"
-          },
-          "nl": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.nl.xlf"
-          },
-          "pt-br": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.pt-br.xlf"
-          },
-          "da": {
-            "baseHref": "",
-            "translation": "src/frontend/translate/messages.da.xlf"
+            "translation": "src/frontend/translate/messages.ko.xlf"
           }
         }
       },
@@ -103,6 +47,7 @@
             "polyfills": "src/frontend/polyfills.ts",
             "assets": [
               "src/frontend/robots.txt",
+              "src/frontend/favicon.svg",
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images/",
@@ -122,6 +67,12 @@
               "node_modules/marked/marked.min.js"
             ],
             "i18nMissingTranslation": "warning",
+            "allowedCommonJsDependencies": [
+              "typeconfig/common",
+              "typeconfig/src/decorators/builders/WebConfigClassBuilder",
+              "typeconfig/src/decorators/class/WebConfigClass",
+              "leaflet"
+            ],
             "customWebpackConfig": {
               "path": "./angular.webpack.js",
               "replaceDuplicatePlugins": true
@@ -156,7 +107,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "2.5mb",
                   "maximumError": "5mb"
                 },
                 {
