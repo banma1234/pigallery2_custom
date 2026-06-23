@@ -70,3 +70,35 @@ app-gallery-filter {
   padding: 0;
   border: none;
 }
+
+/* dropdown menus (sort/group, grid size) styled like the filter card */
+.dropdown-menu {
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  padding: 6px;
+}
+
+.dropdown-menu h6 {
+  font-size: 0.72rem;
+  color: var(--bs-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 6px;
+  margin-bottom: 2px;
+}
+
+.sorting-grouping-item {
+  border-radius: var(--bs-border-radius);
+  padding: 7px 10px !important;
+}
+
+.sorting-grouping-item:hover {
+  background-color: var(--bs-secondary-bg);
+}
+
+.sorting-grouping-item.active {
+  background-color: var(--pg-accent);
+  color: var(--pg-accent-contrast);
+}

@@ -57,39 +57,19 @@
                  [insideClick]="true"
                  title="Sort and group" i18n-title>
                 <button id="button-alignment" dropdownToggle type="button"
-                        class="btn dropdown-toggle  btn-outline-secondary btn-navigator"
+                        class="btn btn-outline-secondary btn-navigator"
                         [class.btn-secondary]="!isDefaultSortingAndGrouping()"
                         [class.btn-outline-secondary]="isDefaultSortingAndGrouping()"
                         aria-controls="sorting-dropdown">
                     <ng-icon *ngIf="sortingService.sorting.value.ascending !== null"
                              [name]="!sortingService.sorting.value.ascending ? 'ionArrowDownOutline' : 'ionArrowUpOutline'"></ng-icon>
                     <app-sorting-method-icon [method]="sortingService.sorting.value.method"></app-sorting-method-icon>
-                    <div class="grouping-icon" *ngIf="sortingService.grouping.value.method !== GroupByTypes.NoGrouping">
-                        <div>
-                            <ng-icon
-                                    [name]="!sortingService.grouping.value.ascending ? 'ionArrowDownOutline' : 'ionArrowUpOutline'"></ng-icon>
-                            <app-sorting-method-icon
-                                    [method]="sortingService.grouping.value.method"></app-sorting-method-icon>
-                        </div>
-                        <div class="ps-1" i18n>
-                            group
-                        </div>
-                    </div>
                 </button>
                 <div id="sorting-dropdown" *dropdownMenu class="dropdown-menu dropdown-menu-right"
                      role="menu" aria-labelledby="button-alignment">
                     <div class="row flex-nowrap">
                         <div class="col  p-1 border-end">
-                            <h6 class="ps-2"><ng-container i18n>Sorting</ng-container>
-                                <button class="btn btn-outline-primary btn-group-follow btn-sm"
-                                        [class.btn-outline-primary]="groupingFollowSorting"
-                                        [class.btn-outline-secondary]="!groupingFollowSorting"
-                                        (click)="groupingFollowSorting=!groupingFollowSorting"
-                                        title="Grouping follows sorting" i18n-title>
-                                    <ng-icon class="" name="ionLinkOutline"></ng-icon>
-                                </button>
-
-                            </h6>
+                            <h6 class="ps-2"><ng-container i18n>Sorting</ng-container></h6>
 
                             <div class="row">
                                 <div class="dropdown-item sorting-grouping-item ps-3 pe-3" role="menuitem"
@@ -165,7 +145,7 @@
             <div class="btn-group" dropdown #dropdown="bs-dropdown" placement="bottom right"
                  title="Grid size" i18n-title>
                 <button id="button-grid-size" dropdownToggle type="button"
-                        class="btn dropdown-toggle  btn-outline-secondary btn-navigator"
+                        class="btn btn-outline-secondary btn-navigator"
                         [class.btn-secondary]="!navigatorService.isDefaultGridSize()"
                         [class.btn-outline-secondary]="navigatorService.isDefaultGridSize()"
                         aria-controls="grid-size-dropdown">

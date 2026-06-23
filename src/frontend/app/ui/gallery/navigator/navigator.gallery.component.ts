@@ -5,7 +5,7 @@ import {UserRoles} from '../../../../../common/entities/UserDTO';
 import {AuthenticationService} from '../../../model/network/authentication.service';
 import {QueryService} from '../../../model/query.service';
 import {Utils} from '../../../../../common/Utils';
-import {GroupByTypes, GroupingMethod, SortByDirectionalTypes, SortByTypes} from '../../../../../common/entities/SortingMethods';
+import {GroupByTypes, SortByDirectionalTypes, SortByTypes} from '../../../../../common/entities/SortingMethods';
 import {Config} from '../../../../../common/config/public/Config';
 import {SearchQueryDTO, SearchQueryTypes, TextSearch, TextSearchQueryMatchTypes,} from '../../../../../common/entities/SearchQueryDTO';
 import {Observable} from 'rxjs';
@@ -61,7 +61,6 @@ export class GalleryNavigatorComponent {
   public showFilters = false;
   @ViewChild('dropdown', {static: true}) dropdown: BsDropdownDirective;
   @ViewChild('navigator', {read: ElementRef}) navigatorElement: ElementRef<HTMLInputElement>;
-  public groupingFollowSorting = true; // if grouping should be set after sorting automatically
   protected readonly GroupByTypes = GroupByTypes;
   private readonly RootFolderName: string;
   private parentPath: string = null;
@@ -209,26 +208,11 @@ export class GalleryNavigatorComponent {
       s.ascending = true;
     }
     this.sortingService.setSorting(s);
-    // you cannot group by random
-    if (!this.isDirectionalSort(sorting) ||
-      // if grouping is disabled, do not update it
-      this.sortingService.grouping.value.method === GroupByTypes.NoGrouping || !this.groupingFollowSorting
-    ) {
-      return;
-    }
-
-    this.sortingService.setGrouping(s);
   }
 
   setSortingAscending(asc: boolean) {
     const s = {method: this.sortingService.sorting.value.method, ascending: asc};
     this.sortingService.setSorting(s);
-
-    // if grouping is disabled, do not update it
-    if (this.sortingService.grouping.value.method == GroupByTypes.NoGrouping || !this.groupingFollowSorting) {
-      return;
-    }
-    this.sortingService.setGrouping(s as GroupingMethod);
   }
 
   setGroupingBy(grouping: number): void {
