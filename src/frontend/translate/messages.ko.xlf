@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="ko" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="4580988005648117665" datatype="html">
+        <source>Search</source>
+        <target>검색</target>
+      </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+        <target>설정</target>
+      </trans-unit>
+      <trans-unit id="3797778920049399855" datatype="html">
+        <source>Logout</source>
+        <target>로그아웃</target>
+      </trans-unit>
+      <trans-unit id="5043933900720743682" datatype="html">
+        <source>Albums</source>
+        <target>앨범</target>
+      </trans-unit>
+      <trans-unit id="169123739434171110" datatype="html">
+        <source>Faces</source>
+        <target>인물</target>
+      </trans-unit>
+      <trans-unit id="2181154762165715522" datatype="html">
+        <source>Gallery</source>
+        <target>갤러리</target>
+      </trans-unit>
+      <trans-unit id="3099741642167775297" datatype="html">
+        <source>Download</source>
+        <target>다운로드</target>
+      </trans-unit>
+      <trans-unit id="3768927257183755959" datatype="html">
+        <source>Save</source>
+        <target>저장</target>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+        <target>취소</target>
+      </trans-unit>
+      <trans-unit id="6932865105766151309" datatype="html">
+        <source>Upload</source>
+        <target>업로드</target>
+      </trans-unit>
+      <trans-unit id="7419704019640008953" datatype="html">
+        <source>Share</source>
+        <target>공유</target>
+      </trans-unit>
+      <trans-unit id="3894950702316166331" datatype="html">
+        <source>Loading...</source>
+        <target>불러오는 중...</target>
+      </trans-unit>
+      <trans-unit id="7022070615528435141" datatype="html">
+        <source>Delete</source>
+        <target>삭제</target>
+      </trans-unit>
+      <trans-unit id="7819314041543176992" datatype="html">
+        <source>Close</source>
+        <target>닫기</target>
+      </trans-unit>
+      <trans-unit id="3587873128318078848" datatype="html">
+        <source>Duplicates</source>
+        <target>중복</target>
+      </trans-unit>
+      <trans-unit id="1684734235599362204" datatype="html">
+        <source>Tools</source>
+        <target>도구</target>
+      </trans-unit>
+      <trans-unit id="413116577994876478" datatype="html">
+        <source>Light</source>
+        <target>라이트</target>
+      </trans-unit>
+      <trans-unit id="3892161059518616136" datatype="html">
+        <source>Dark</source>
+        <target>다크</target>
+      </trans-unit>
+      <trans-unit id="616064537937996961" datatype="html">
+        <source>Auto</source>
+        <target>자동</target>
+      </trans-unit>
+      <trans-unit id="3302121187449737262" datatype="html">
+        <source>Search query</source>
+        <target>검색어</target>
+      </trans-unit>
+      <trans-unit id="8405309693308875139" datatype="html">
+        <source>Photos</source>
+        <target>사진</target>
+      </trans-unit>
+      <trans-unit id="8936704404804793618" datatype="html">
+        <source>Videos</source>
+        <target>동영상</target>
+      </trans-unit>
+      <trans-unit id="1205037876874222931" datatype="html">
+        <source>Folders</source>
+        <target>폴더</target>
+      </trans-unit>
+      <trans-unit id="4085930761302974863" datatype="html">
+        <source>Favorites</source>
+        <target>즐겨찾기</target>
+      </trans-unit>
+      <trans-unit id="1356890996281769972" datatype="html">
+        <source>Dark mode</source>
+        <target>다크 모드</target>
+      </trans-unit>
+      <trans-unit id="1655602937917394671" datatype="html">
+        <source>Toggle dark mode</source>
+        <target>다크 모드 전환</target>
+      </trans-unit>
+      <trans-unit id="8690749351031934025" datatype="html">
+        <source>Remove favorite</source>
+        <target>즐겨찾기 제거</target>
+      </trans-unit>
+      <trans-unit id="2595203250116897745" datatype="html">
+        <source>Open sidebar</source>
+        <target>사이드바 열기</target>
+      </trans-unit>
+      <trans-unit id="1556270137829928334" datatype="html">
+        <source>Close menu</source>
+        <target>메뉴 닫기</target>
+      </trans-unit>
+      <trans-unit id="4318411607012723106" datatype="html">
+        <source>Go to photo</source>
+        <target>사진으로 이동</target>
+      </trans-unit>
+      <trans-unit id="8515292563597252067" datatype="html">
+        <source>Download (shift + D)</source>
+        <target>다운로드 (Shift + D)</target>
+      </trans-unit>
+      <trans-unit id="6067456988448555675" datatype="html">
+        <source>Slideshow speed</source>
+        <target>슬라이드쇼 속도</target>
+      </trans-unit>
+      <trans-unit id="4163272119298020373" datatype="html">
+        <source>Filters</source>
+        <target>필터</target>
+      </trans-unit>
+      <trans-unit id="53284904959011055" datatype="html">
+        <source>Grid size</source>
+        <target>그리드 크기</target>
+      </trans-unit>
+      <trans-unit id="4124492018839258838" datatype="html">
+        <source>Sort and group</source>
+        <target>정렬 및 그룹</target>
+      </trans-unit>
+      <trans-unit id="2774613742044941352" datatype="html">
+        <source>Sorting</source>
+        <target>정렬</target>
+      </trans-unit>
+      <trans-unit id="877780134171662191" datatype="html">
+        <source>Grouping</source>
+        <target>그룹</target>
+      </trans-unit>
+      <trans-unit id="314315645942131479" datatype="html">
+        <source>Info</source>
+        <target>정보</target>
+      </trans-unit>
+      <trans-unit id="413346167952108153" datatype="html">
+        <source>items</source>
+        <target>개</target>
+      </trans-unit>
+      <trans-unit id="8694940375908723103" datatype="html">
+        <source>AI mode</source>
+        <target>AI 모드</target>
+      </trans-unit>
+      <trans-unit id="6910040675641962704" datatype="html">
+        <source>Toggle AI mode</source>
+        <target>AI 모드 전환</target>
+      </trans-unit>
+      <trans-unit id="2346024984047785710" datatype="html">
+        <source>Toggle sidebar</source>
+        <target>사이드바 전환</target>
+      </trans-unit>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
+        <target>언어</target>
+      </trans-unit>
+      <trans-unit id="80516320088170434" datatype="html">
+        <source>Prompt</source>
+        <target>프롬프트</target>
+      </trans-unit>
+      <trans-unit id="4017138151612781677" datatype="html">
+        <source>Negative prompt</source>
+        <target>네거티브 프롬프트</target>
+      </trans-unit>
+      <trans-unit id="1141886420788473147" datatype="html">
+        <source>Model</source>
+        <target>모델</target>
+      </trans-unit>
+      <trans-unit id="1819215007804875232" datatype="html">
+        <source>Seed</source>
+        <target>시드</target>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+        <target>스텝</target>
+      </trans-unit>
+      <trans-unit id="784889727145399651" datatype="html">
+        <source>Sampler</source>
+        <target>샘플러</target>
+      </trans-unit>
+      <trans-unit id="8941823141242821644" datatype="html">
+        <source>CFG</source>
+        <target>CFG</target>
+      </trans-unit>
+      <trans-unit id="6232846365977587709" datatype="html">
+        <source>Scheduler</source>
+        <target>스케줄러</target>
+      </trans-unit>
+      <trans-unit id="182587458645913" datatype="html">
+        <source>Noise</source>
+        <target>노이즈</target>
+      </trans-unit>
+      <trans-unit id="45739481977493163" datatype="html">
+        <source>Size</source>
+        <target>크기</target>
+      </trans-unit>
+      <trans-unit id="2365589922469291816" datatype="html">
+        <source>AI generation parameters</source>
+        <target>AI 생성 파라미터</target>
+      </trans-unit>
+      <trans-unit id="7387605543391879165" datatype="html">
+        <source>Not an AI-generated image</source>
+        <target>AI 생성 이미지가 아닙니다</target>
+      </trans-unit>
+      <trans-unit id="1800191091977352613" datatype="html">
+        <source>AI-generated image (no metadata found)</source>
+        <target>AI 생성 이미지 (메타데이터 없음)</target>
+      </trans-unit>
+      <trans-unit id="3869010919080251024" datatype="html">
+        <source>AI generated</source>
+        <target>AI 생성</target>
+      </trans-unit>
+      <trans-unit id="5858372835040312219" datatype="html">
+        <source>Prev folder</source>
+        <target>이전 폴더</target>
+      </trans-unit>
+      <trans-unit id="5523357630140634984" datatype="html">
+        <source>Next folder</source>
+        <target>다음 폴더</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
