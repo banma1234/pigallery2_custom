@@ -1,5 +1,84 @@
-:root{
-  --item-background: #bbbbbb
+:root {
+  /* placeholder bg shown while a thumbnail loads */
+  --item-background: #bbbbbb;
+
+  /* --- PiGallery2 homelab custom design tokens --- */
+  /* card surfaces & borders adapt to the active Bootstrap theme */
+  --pg-card-border: var(--bs-border-color);
+  --pg-card-border-hover: var(--bs-border-color-translucent);
+  --pg-card-radius: 0.625rem;
+
+  /* dark overlay used for folder/album name labels on top of thumbnails */
+  --pg-overlay-bg: rgba(0, 0, 0, 0.55);
+  --pg-overlay-bg-hover: rgba(0, 0, 0, 0.78);
+  --pg-overlay-text: #ffffff;
+
+  /* accent used for AI mode and active highlights (violet, Fab-like) */
+  --pg-accent: #6b5fd6;
+  --pg-accent-hover: #5a4fc4;
+  --pg-accent-contrast: #ffffff;
+  --pg-surface: var(--bs-secondary-bg);
+  --pg-surface-2: var(--bs-tertiary-bg);
+
+  /* favorite star */
+  --pg-star: #e9b949;
+
+  /* left navigation sidebar width (desktop) */
+  --pg-sidebar-width: 266px;
+
+  /* unified corner radius scale (balanced tone) */
+  --bs-border-radius: 0.5rem;
+  --bs-border-radius-sm: 0.375rem;
+  --bs-border-radius-lg: 0.75rem;
+  --bs-border-radius-xl: 1rem;
+
+  /* UI font stack: Inter for Latin, Pretendard for Korean (Latin glyphs
+     resolve to Inter first; Hangul falls through to Pretendard). */
+  --pg-font-sans: 'Inter', 'Pretendard', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Roboto, sans-serif;
+  --bs-body-font-family: var(--pg-font-sans);
+  --bs-font-sans-serif: var(--pg-font-sans);
+}
+
+body {
+  font-family: var(--pg-font-sans);
+}
+
+[data-bs-theme=dark] {
+  --item-background: #2a2f3a;
+
+  /* violet accent */
+  --pg-accent: #9b87f5;
+  --pg-accent-hover: #7c66ef;
+  --pg-accent-contrast: #1a1530;
+
+  /* deep blue-black surfaces */
+  --bs-body-bg: #0e1014;
+  --bs-body-bg-rgb: 14, 16, 20;
+  --bs-secondary-bg: #14171e;
+  --bs-secondary-bg-rgb: 20, 23, 30;
+  --bs-tertiary-bg: #191d26;
+  --bs-tertiary-bg-rgb: 25, 29, 38;
+
+  /* text */
+  --bs-body-color: #e7e9ee;
+  --bs-body-color-rgb: 231, 233, 238;
+  --bs-emphasis-color: #ffffff;
+  --bs-emphasis-color-rgb: 255, 255, 255;
+  --bs-secondary-color: rgba(231, 233, 238, 0.66);
+  --bs-tertiary-color: rgba(231, 233, 238, 0.42);
+  --bs-heading-color: #ffffff;
+
+  /* borders */
+  --bs-border-color: #232838;
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.12);
+
+  /* accent / links */
+  --bs-primary: #9b87f5;
+  --bs-primary-rgb: 155, 135, 245;
+  --bs-link-color: #b8a8f8;
+  --bs-link-color-rgb: 184, 168, 248;
+  --bs-link-hover-color: #cbbdfb;
+  --bs-link-hover-color-rgb: 203, 189, 251;
 }
 
 a {
@@ -61,7 +140,8 @@ ng-icon {
 
 ng-icon:not([strokeWidth]) svg {
   vertical-align: unset;
-  --ng-icon__stroke-width: 40;
+  /* Tabler icons use a 24px viewBox with a 2px stroke */
+  --ng-icon__stroke-width: 2;
 }
 
 .rounded-start-bottom {
@@ -78,21 +158,74 @@ This is mostly btn-dark + border fix
 */
 [data-bs-theme=dark] .btn-tertiary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: var(--bs-body-bg);
+  --bs-btn-bg: var(--bs-secondary-bg);
   --bs-btn-border-color: var(--bs-border-color);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #424649;
-  --bs-btn-hover-border-color: #373b3e;
-  --bs-btn-focus-shadow-rgb: 66, 70, 73;
+  --bs-btn-hover-bg: var(--bs-tertiary-bg);
+  --bs-btn-hover-border-color: var(--bs-border-color);
+  --bs-btn-focus-shadow-rgb: 155, 135, 245;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #4d5154;
-  --bs-btn-active-border-color: #373b3e;
+  --bs-btn-active-bg: var(--bs-tertiary-bg);
+  --bs-btn-active-border-color: var(--bs-border-color);
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #212529;
-  --bs-btn-disabled-border-color: #212529;
-  /* border: var(--bs-border-width) solid var(--bs-border-color);*/
+  --bs-btn-disabled-bg: var(--bs-secondary-bg);
+  --bs-btn-disabled-border-color: var(--bs-border-color);
+}
+
+/* violet primary buttons (both themes) */
+.btn-primary {
+  --bs-btn-bg: var(--pg-accent);
+  --bs-btn-border-color: var(--pg-accent);
+  --bs-btn-color: var(--pg-accent-contrast);
+  --bs-btn-hover-bg: var(--pg-accent-hover);
+  --bs-btn-hover-border-color: var(--pg-accent-hover);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-active-bg: var(--pg-accent-hover);
+  --bs-btn-active-border-color: var(--pg-accent-hover);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-disabled-bg: var(--pg-accent);
+  --bs-btn-disabled-border-color: var(--pg-accent);
+  --bs-btn-disabled-color: var(--pg-accent-contrast);
 }
 
 
 body {overflow-y: scroll;}
+
+/* Root layout shell: reserve space for the fixed sidebar on desktop only.
+   On mobile the sidebar is an off-canvas overlay, so no gutter is reserved. */
+@media (min-width: 768px) {
+  .app-content-shell.with-sidebar {
+    margin-left: var(--pg-sidebar-width);
+  }
+}
+
+/* Slim scrollbars without arrow buttons */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bs-border-color) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--bs-border-color);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--bs-secondary-color);
+}

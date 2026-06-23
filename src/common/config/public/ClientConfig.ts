@@ -1528,7 +1528,7 @@ export class ClientServiceConfig {
       name: $localize`Page title`
     } as TAGS
   })
-  applicationTitle: string = 'PiGallery 2';
+  applicationTitle: string = 'PiGallery2 for AI';
 
   @ConfigProperty({
     description: $localize`If you access the page from local network it's good to know the public url for creating sharing link.`,

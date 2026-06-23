@@ -21,7 +21,8 @@ export class ThemeService {
     if (this.cachingService.getThemeMode()) {
       this.setMode(this.cachingService.getThemeMode());
     } else {
-      this.setMode(Config.Gallery.Themes.defaultMode);
+      // First entry defaults to dark mode (no system/auto), per homelab UI policy.
+      this.setMode(ThemeModes.dark);
     }
     this.darkMode.subscribe((darkMode: boolean) => {
           this.applyMode(darkMode);
