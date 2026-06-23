@@ -1,7 +1,6 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import {Dimension, IRenderable} from '../../../../model/IRenderable';
 import {GridMedia} from '../GridMedia';
-import {RouterLink} from '@angular/router';
 import {Thumbnail, ThumbnailManagerService,} from '../../thumbnailManager.service';
 import {Config} from '../../../../../../common/config/public/Config';
 import {PageHelper} from '../../../../model/page.helper';
@@ -10,7 +9,7 @@ import {SearchQueryTypes, TextSearch, TextSearchQueryMatchTypes,} from '../../..
 import {AuthenticationService} from '../../../../model/network/authentication.service';
 import {ExtensionService} from '../../../../model/extension.service';
 import {MediaButtonModalService} from './media-button-modal/media-button-modal.service';
-import {NgFor, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {GalleryPhotoLoadingComponent} from './loading/loading.photo.grid.gallery.component';
 import {NgIconComponent} from '@ng-icons/core';
 import {DurationPipe} from '../../../../pipes/DurationPipe';
@@ -31,10 +30,7 @@ export interface IClientMediaButtonConfigWithBaseApiPath extends IClientMediaBut
     NgIf,
     GalleryPhotoLoadingComponent,
     NgIconComponent,
-    RouterLink,
     NgFor,
-    NgSwitch,
-    NgSwitchCase,
     DurationPipe,
     SafeHtmlPipe,
   ]
@@ -67,6 +63,10 @@ export class GalleryPhotoComponent implements IRenderable, OnInit, OnDestroy {
 
   get ScrollListener(): boolean {
     return !this.thumbnail.Available && !this.thumbnail.Error;
+  }
+
+  get isAI(): boolean {
+    return !!(this.gridMedia?.media?.metadata as PhotoMetadata)?.isAIGenerated;
   }
 
   get Title(): string {

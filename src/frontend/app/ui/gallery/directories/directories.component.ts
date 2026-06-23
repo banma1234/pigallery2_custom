@@ -44,7 +44,9 @@ export class DirectoriesComponent implements OnChanges {
       this.size = Math.floor(containerWidth / 2 - (directoryMargin * 2));
     } else {
       const targetSize = 220 + directoryMargin;
-      this.size = Math.floor(containerWidth / Math.round((containerWidth / targetSize)) - directoryMargin * 2);
+      // always keep at least 2 folder columns, even on narrow viewports
+      const columns = Math.max(2, Math.round(containerWidth / targetSize));
+      this.size = Math.floor(containerWidth / columns - directoryMargin * 2);
     }
   }
 }

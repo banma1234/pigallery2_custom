@@ -11,7 +11,14 @@
          *ngIf="thumbnail && thumbnail.Available"
          [style.background-image]="getSanitizedThUrl()"></div>
 
-    <app-icon *ngIf="!thumbnail || !thumbnail.Available"  class="no-image"></app-icon>
+    <ng-icon *ngIf="!thumbnail || !thumbnail.Available" name="ionFolderOutline" class="no-image"></ng-icon>
+
+    <button class="fav-toggle" type="button"
+            [class.active]="isFavorite()"
+            (click)="toggleFavorite($event)"
+            [attr.aria-label]="isFavorite() ? 'Remove favorite' : 'Add favorite'">
+      <ng-icon [name]="isFavorite() ? 'ionStar' : 'ionStarOutline'"></ng-icon>
+    </button>
   </div>
   <!--Info box -->
   <div class="info rounded-bottom">

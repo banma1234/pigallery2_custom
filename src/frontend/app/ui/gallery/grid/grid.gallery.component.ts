@@ -12,7 +12,6 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {GridRowBuilder} from './GridRowBuilder';
 import {GalleryLightboxComponent} from '../lightbox/lightbox.gallery.component';
 import {GridMedia} from './GridMedia';
 import {GalleryPhotoComponent} from './photo/photo.grid.gallery.component';
@@ -22,7 +21,7 @@ import {PageHelper} from '../../../model/page.helper';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {QueryService} from '../../../model/query.service';
-import {MediaDTO, MediaDTOUtils,} from '../../../../../common/entities/MediaDTO';
+import {MediaDTO} from '../../../../../common/entities/MediaDTO';
 import {QueryParams} from '../../../../../common/QueryParams';
 import {GallerySortingService, MediaGroup} from '../navigator/sorting.service';
 import {GroupByTypes} from '../../../../../common/entities/SortingMethods';
@@ -76,9 +75,9 @@ export class GalleryGridComponent
   public readonly GroupByTypes = GroupByTypes;
   public readonly blogOpen = Config.Gallery.InlineBlogStartsOpen;
   private scrollListenerPhotos: GalleryPhotoComponent[] = [];
-  private TARGET_COL_COUNT = 5;
+  // target edge length (px) of a square grid cell; drives how many columns fit
+  private targetCellWidth = 160;
   private MIN_ROW_COUNT = 2;
-  private MAX_ROW_COUNT = 5;
   private onScrollFired = false;
   private helperTime: number = null;
 
@@ -130,33 +129,28 @@ export class GalleryGridComponent
     this.subscriptions.girdSize = this.navigatorService.girdSize.subscribe(gs => {
       switch (gs) {
         case GridSizes.extraSmall:
-          this.TARGET_COL_COUNT = 12;
+          this.targetCellWidth = 90;
           this.MIN_ROW_COUNT = 5;
-          this.MAX_ROW_COUNT = 10;
           this.IMAGE_MARGIN = 1;
           break;
         case GridSizes.small:
-          this.TARGET_COL_COUNT = 8;
+          this.targetCellWidth = 120;
           this.MIN_ROW_COUNT = 3;
-          this.MAX_ROW_COUNT = 8;
           this.IMAGE_MARGIN = 1.5;
           break;
         case GridSizes.medium:
-          this.TARGET_COL_COUNT = 5;
+          this.targetCellWidth = 160;
           this.MIN_ROW_COUNT = 2;
-          this.MAX_ROW_COUNT = 5;
           this.IMAGE_MARGIN = 2;
           break;
         case GridSizes.large:
-          this.TARGET_COL_COUNT = 2;
-          this.MIN_ROW_COUNT = 1;
-          this.MAX_ROW_COUNT = 3;
+          this.targetCellWidth = 220;
+          this.MIN_ROW_COUNT = 2;
           this.IMAGE_MARGIN = 2;
           break;
         case GridSizes.extraLarge:
-          this.TARGET_COL_COUNT = 1;
-          this.MIN_ROW_COUNT = 1;
-          this.MAX_ROW_COUNT = 2;
+          this.targetCellWidth = 300;
+          this.MIN_ROW_COUNT = 2;
           this.IMAGE_MARGIN = 2;
           break;
       }
@@ -305,6 +299,17 @@ export class GalleryGridComponent
     media.splice(firstDeleteIndex.media);
   }
 
+  // number of columns for the uniform square grid; never fewer than 2
+  private getColumnCount(): number {
+    const availableWidth =
+      this.containerWidth - this.overlayService.getPhantomScrollbarWidth();
+    if (availableWidth <= 0) {
+      return 2;
+    }
+    return Math.max(2, Math.floor(availableWidth / this.targetCellWidth));
+  }
+
+  // renders one row (a chunk of `columns` square cells) of the current group
   public renderARow(): number {
     if (
       !this.isMoreToRender() ||
@@ -313,7 +318,7 @@ export class GalleryGridComponent
       return null;
     }
 
-    // step group
+    // step to the next group once the current one is fully rendered
     if (this.mediaToRender.length == 0 ||
       this.mediaToRender[this.mediaToRender.length - 1].media.length >=
       this.mediaGroups[this.mediaToRender.length - 1].media.length) {
@@ -324,39 +329,24 @@ export class GalleryGridComponent
       } as GridMediaGroup);
     }
 
-    let maxRowHeight = this.getMaxRowHeight();
-    const minRowHeight = this.screenHeight / this.MAX_ROW_COUNT;
+    const columns = this.getColumnCount();
+    const availableWidth =
+      this.containerWidth - this.overlayService.getPhantomScrollbarWidth();
+    // uniform square cell; subtract the per-cell margins applied in the template
+    const cellSize = Math.floor(availableWidth / columns) - this.IMAGE_MARGIN * 2;
 
-    const photoRowBuilder = new GridRowBuilder(
-      this.mediaGroups[this.mediaToRender.length - 1].media,
-      this.mediaToRender[this.mediaToRender.length - 1].media.length,
-      this.IMAGE_MARGIN,
-      this.containerWidth - this.overlayService.getPhantomScrollbarWidth()
-    );
+    const groupIndex = this.mediaToRender.length - 1;
+    const sourceMedia = this.mediaGroups[groupIndex].media;
+    const renderedMedia = this.mediaToRender[groupIndex].media;
+    // all cells pushed in this call share one rowId (used by mergeNewPhotos)
+    const rowId = renderedMedia.length;
+    const end = Math.min(renderedMedia.length + columns, sourceMedia.length);
 
-    photoRowBuilder.addPhotos(this.TARGET_COL_COUNT);
-    photoRowBuilder.adjustRowHeightBetween(minRowHeight, maxRowHeight);
-
-    // little trick: We don't want too big single images. But if a little extra height helps fit the row, its ok
-    if (photoRowBuilder.getPhotoRow().length > 1) {
-      maxRowHeight *= 1.2;
+    for (let i = renderedMedia.length; i < end; ++i) {
+      renderedMedia.push(new GridMedia(sourceMedia[i], cellSize, cellSize, rowId));
     }
-    const noFullRow = photoRowBuilder.calcRowHeight() > maxRowHeight;
-    // if the row is not full, make it average sized
-    const rowHeight = noFullRow ? (minRowHeight + maxRowHeight) / 2 :
-      Math.min(photoRowBuilder.calcRowHeight(), maxRowHeight);
-    const imageHeight = rowHeight - this.IMAGE_MARGIN * 2;
 
-    const rowId = this.mediaToRender[this.mediaToRender.length - 1].media.length;
-    photoRowBuilder.getPhotoRow().forEach((media): void => {
-      const imageWidth = imageHeight * MediaDTOUtils.calcAspectRatio(media);
-      this.mediaToRender[this.mediaToRender.length - 1].media.push(
-        new GridMedia(media, imageWidth, imageHeight, rowId)
-      );
-    });
-
-    //this.renderedPhotoIndex += photoRowBuilder.getPhotoRow().length;
-    return rowHeight;
+    return cellSize + this.IMAGE_MARGIN * 2;
   }
 
   @HostListener('window:scroll')
