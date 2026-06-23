@@ -17,6 +17,7 @@ import {Utils} from '../../../common/Utils';
 import {FFmpegFactory} from '../FFmpegFactory';
 import {ExtensionDecorator} from '../extension/ExtensionDecorator';
 import {DateTags} from './MetadataCreationDate';
+import {AIMetadataLoader} from './AIMetadataLoader';
 
 const {imageSizeFromFile} = require('image-size/fromFile');
 const LOG_TAG = '[MetadataLoader]';
@@ -225,12 +226,13 @@ export class MetadataLoader {
         }
       }
 
+      let exifData: any = null;
       try {
         try {
-          const exif = await exifr.parse(fullPath, exifrOptions);
-          MetadataLoader.mapMetadata(metadata, exif, true);
-          if (exif?.makerNote) {
-            const contentId = MetadataLoader.parseAppleMakerNoteContentId(exif.makerNote);
+          exifData = await exifr.parse(fullPath, exifrOptions);
+          MetadataLoader.mapMetadata(metadata, exifData, true);
+          if (exifData?.makerNote) {
+            const contentId = MetadataLoader.parseAppleMakerNoteContentId(exifData.makerNote);
             if (contentId) {
               metadata.contentIdentifier = contentId;
             }
@@ -268,6 +270,15 @@ export class MetadataLoader {
         } catch (err) {
           Logger.silly(LOG_TAG, 'Error loading sidecar metadata for : ' + fullPath);
           Logger.silly(err);
+        }
+        try {
+          const ai = AIMetadataLoader.extract(fullPath, exifData, metadata.title, metadata.caption);
+          if (ai) {
+            metadata.aiMetadata = ai;
+            metadata.isAIGenerated = true;
+          }
+        } catch (e) {
+          Logger.silly(LOG_TAG, 'Error extracting AI metadata for: ' + fullPath);
         }
         if (!metadata.creationDate) {
           // creationDate can be negative, when it was created before epoch (1970)

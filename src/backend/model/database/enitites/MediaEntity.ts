@@ -4,6 +4,7 @@ import {LiveVideoInfo, MediaDimension, MediaDTO, MediaMetadata,} from '../../../
 import {PersonJunctionTable} from './person/PersonJunctionTable';
 import {columnCharsetCS} from './EntityUtils';
 import {CameraMetadata, FaceRegion, GPSMetadata, PositionMetaData,} from '../../../../common/entities/PhotoDTO';
+import {AIMetadata} from '../../../../common/entities/AIMetadata';
 import {Utils} from '../../../../common/Utils';
 
 export class MediaDimensionEntity implements MediaDimension {
@@ -146,6 +147,30 @@ export class MediaMetadataEntity implements MediaMetadata {
     collation: columnCharsetCS.collation
   })
   faces: FaceRegion[];
+
+  @Column({
+    type: 'simple-json',
+    nullable: true,
+    charset: columnCharsetCS.charset,
+    collation: columnCharsetCS.collation
+  })
+  aiMetadata: AIMetadata;
+
+  /**
+   * true when the image is detected as AI-generated (text-chunk/EXIF at scan
+   * time, or stealth LSB by the background job). Used for the gallery badge.
+   */
+  @Column({type: 'boolean', default: false})
+  @Index()
+  isAIGenerated: boolean;
+
+  /**
+   * true once the deferred (heavy) stealth-LSB pass has run for this media,
+   * so the background AI metadata job does not reprocess it. Persistent queue
+   * state; not sent to the client.
+   */
+  @Column({type: 'boolean', default: false, select: false})
+  aiScanned: boolean;
 
   /**
    * Caches the list of persons. Only used for searching
