@@ -1,16 +1,13 @@
 :host {
   position: relative;
   overflow: hidden;
-  transition: scale .3s ease-out;
-}
-
-:host:hover {
-  scale: 98%;
 }
 
 img {
   width: inherit;
   height: inherit;
+  object-fit: cover; /* uniform square grid: crop to fill the cell instead of stretching */
+  transition: transform .3s ease-out;
 
   -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
   -moz-animation: fadein 2s; /* Firefox < 16 */
@@ -116,6 +113,11 @@ img.loading {
   overflow: hidden;
 }
 
+/* zoom only the image on hover; the frame stays the same size (host clips) */
+.photo-container:hover img {
+  transform: scale(1.2);
+}
+
 .photo-name {
   display: inline-block;
 }
@@ -179,6 +181,30 @@ a {
 
 .photo-keywords ng-icon {
   margin-right: 2px;
+}
+
+/* AI-generated badge: top-right pill, violet accent */
+.ai-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--pg-accent-hover);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.ai-badge ng-icon {
+  font-size: 0.85rem;
 }
 
 .media-buttons {

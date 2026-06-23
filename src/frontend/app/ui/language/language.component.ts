@@ -3,7 +3,7 @@ import {Config} from '../../../../common/config/public/Config';
 import {CookieNames} from '../../../../common/CookieNames';
 import {CookieService} from 'ngx-cookie-service';
 import { BsDropdownDirective, BsDropdownToggleDirective, BsDropdownMenuDirective } from 'ngx-bootstrap/dropdown';
-import { NgIf, NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { NgIconComponent } from '@ng-icons/core';
 
 @Component({
@@ -13,7 +13,6 @@ import { NgIconComponent } from '@ng-icons/core';
     imports: [
         BsDropdownDirective,
         BsDropdownToggleDirective,
-        NgIf,
         NgIconComponent,
         BsDropdownMenuDirective,
         NgFor,

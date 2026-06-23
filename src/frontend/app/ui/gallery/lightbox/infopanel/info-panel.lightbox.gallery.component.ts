@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output,} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, OnChanges, OnInit, Output,} from '@angular/core';
 import {CameraMetadata, PhotoDTO, PhotoMetadata, PositionMetaData,} from '../../../../../../common/entities/PhotoDTO';
 import {Config} from '../../../../../../common/config/public/Config';
 import {MediaDTO, MediaDTOUtils,} from '../../../../../../common/entities/MediaDTO';
@@ -24,6 +24,10 @@ import {LeafletModule} from '@bluehalo/ngx-leaflet';
 import {DurationPipe} from '../../../../pipes/DurationPipe';
 import {FileSizePipe} from '../../../../pipes/FileSizePipe';
 import {SearchQueryUtils} from '../../../../../../common/SearchQueryUtils';
+import {FormsModule} from '@angular/forms';
+import {LightboxService} from '../lightbox.service';
+import {AIService} from '../../../../model/ai.service';
+import {AIMetadata, AIMetadataSource} from '../../../../../../common/entities/AIMetadata';
 
 @Component({
   selector: 'app-info-panel',
@@ -40,11 +44,34 @@ import {SearchQueryUtils} from '../../../../../../common/SearchQueryUtils';
     DatePipe,
     DurationPipe,
     FileSizePipe,
+    FormsModule,
   ]
 })
 export class InfoPanelLightboxComponent implements OnInit, OnChanges {
   @Input() media: MediaDTO;
+  // bottom-sheet mode (tablet & phone); when false the panel is right-docked
+  @Input() sheet = false;
+  @Input() downloadUrl: string;
+  @Input() downloadName: string;
   @Output() closed = new EventEmitter();
+  // close the whole lightbox (footer X)
+  @Output() requestClose = new EventEmitter();
+
+  // sheet expand/collapse state (only used in sheet mode)
+  public sheetExpanded = false;
+  public readonly playBackDurations = [1, 2, 5, 10, 15, 20, 30, 60];
+
+  @HostBinding('class.sheet') get hostSheet(): boolean {
+    return this.sheet;
+  }
+
+  @HostBinding('class.docked') get hostDocked(): boolean {
+    return !this.sheet;
+  }
+
+  @HostBinding('class.sheet-expanded') get hostSheetExpanded(): boolean {
+    return this.sheet && this.sheetExpanded;
+  }
 
   public readonly mapEnabled: boolean;
   public readonly searchEnabled: boolean;
@@ -59,7 +86,9 @@ export class InfoPanelLightboxComponent implements OnInit, OnChanges {
     public contentLoaderService: ContentLoaderService,
     public mapService: MapService,
     private authService: AuthenticationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    public lightboxService: LightboxService,
+    public aiService: AIService
   ) {
     this.mapEnabled = Config.Map.enabled;
     this.searchEnabled = this.authService.canSearch();
@@ -117,6 +146,76 @@ export class InfoPanelLightboxComponent implements OnInit, OnChanges {
 
   get CameraData(): CameraMetadata {
     return (this.media as PhotoDTO).metadata.cameraData;
+  }
+
+  // --- AI generation metadata ---
+  get ai(): AIMetadata {
+    return (this.media as PhotoDTO).metadata.aiMetadata;
+  }
+
+  get aiVisible(): boolean {
+    return this.aiService.enabled.value && !!this.ai;
+  }
+
+  get isAIGenerated(): boolean {
+    return !!(this.media as PhotoDTO).metadata.isAIGenerated;
+  }
+
+  // AI mode on, but this image is flagged as NOT AI-generated
+  get aiNotGenerated(): boolean {
+    return this.aiService.enabled.value && !this.ai && !this.isAIGenerated;
+  }
+
+  // AI mode on, image is AI-generated, but no structured metadata was parsed
+  get aiNoMetadata(): boolean {
+    return this.aiService.enabled.value && !this.ai && this.isAIGenerated;
+  }
+
+  get aiSourceLabel(): string {
+    switch (this.ai?.source) {
+      case AIMetadataSource.comfy:
+        return 'ComfyUI';
+      case AIMetadataSource.novelai:
+        return 'NovelAI';
+      case AIMetadataSource.basic:
+        return 'Stable Diffusion';
+      default:
+        return '';
+    }
+  }
+
+  private get aiData(): any {
+    const a = this.ai;
+    return a ? a.basic || a.comfy || a.novelai || {} : {};
+  }
+
+  get aiPrompt(): string {
+    return this.aiData.prompt;
+  }
+
+  get aiNegative(): string {
+    return this.aiData.negativePrompt;
+  }
+
+  get aiFields(): { label: string; value: string }[] {
+    const d = this.aiData;
+    const out: { label: string; value: string }[] = [];
+    const push = (label: string, val: unknown): void => {
+      if (val !== undefined && val !== null && val !== '') {
+        out.push({label, value: String(val)});
+      }
+    };
+    push($localize`Model`, d.model);
+    push($localize`Seed`, d.seed);
+    push($localize`Steps`, d.steps);
+    push($localize`Sampler`, d.sampler);
+    push($localize`CFG`, d.cfgScale ?? d.scale);
+    push($localize`Scheduler`, d.scheduler);
+    push($localize`Noise`, d.noiseSchedule);
+    if (d.width && d.height) {
+      push($localize`Size`, d.width + ' × ' + d.height);
+    }
+    return out;
   }
 
   ngOnChanges(): void {
@@ -215,6 +314,10 @@ export class InfoPanelLightboxComponent implements OnInit, OnChanges {
 
   close(): void {
     this.closed.emit();
+  }
+
+  toggleSheet(): void {
+    this.sheetExpanded = !this.sheetExpanded;
   }
 
   getTextSearchQuery(name: string, type: SearchQueryTypes): string {

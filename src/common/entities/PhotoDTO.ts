@@ -1,5 +1,6 @@
 import {DirectoryPathDTO} from './DirectoryDTO';
 import {MediaDimension, MediaDTO, MediaMetadata} from './MediaDTO';
+import {AIMetadata} from './AIMetadata';
 
 export interface CoverPhotoDTO extends MediaDTO {
   name: string;
@@ -36,6 +37,8 @@ export interface PhotoMetadata extends MediaMetadata {
   creationDateOffset?: string;
   fileSize: number;
   faces?: FaceRegion[];
+  aiMetadata?: AIMetadata;
+  isAIGenerated?: boolean;
 }
 
 export interface PositionMetaData {

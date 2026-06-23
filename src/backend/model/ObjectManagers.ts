@@ -11,6 +11,7 @@ import {SearchManager} from './database/SearchManager';
 import {VersionManager} from './database/VersionManager';
 import {CoverManager} from './database/CoverManager';
 import {AlbumManager} from './database/AlbumManager';
+import {FavoriteFolderManager} from './database/FavoriteFolderManager';
 import {PersonManager} from './database/PersonManager';
 import {SharingManager} from './database/SharingManager';
 import {IObjectManager} from './database/IObjectManager';
@@ -37,6 +38,7 @@ export class ObjectManagers {
   private jobManager: JobManager;
   private locationManager: LocationManager;
   private albumManager: AlbumManager;
+  private favoriteFolderManager: FavoriteFolderManager;
   private extensionManager: ExtensionManager;
   private projectedCacheManager: ProjectedCacheManager;
   private uploadManager: UploadManager;
@@ -95,6 +97,7 @@ export class ObjectManagers {
 
   private async initManagers(): Promise<void> {
     this.AlbumManager = new AlbumManager();
+    this.FavoriteFolderManager = new FavoriteFolderManager();
     this.GalleryManager = new GalleryManager();
     this.IndexingManager = new IndexingManager();
     this.PersonManager = new PersonManager();
@@ -170,6 +173,18 @@ export class ObjectManagers {
     }
     this.albumManager = value;
     this.managers.push(this.albumManager);
+  }
+
+  get FavoriteFolderManager(): FavoriteFolderManager {
+    return this.favoriteFolderManager;
+  }
+
+  set FavoriteFolderManager(value: FavoriteFolderManager) {
+    if (this.favoriteFolderManager) {
+      this.managers.splice(this.managers.indexOf(this.favoriteFolderManager), 1);
+    }
+    this.favoriteFolderManager = value;
+    this.managers.push(this.favoriteFolderManager);
   }
 
   get PersonManager(): PersonManager {

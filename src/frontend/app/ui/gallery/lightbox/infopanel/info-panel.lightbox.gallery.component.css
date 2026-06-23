@@ -1,25 +1,117 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .content {
-  height: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+/* fixed footer with detail-view controls (download / speed / close) */
+.panel-footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.footer-btn:hover {
+  background: var(--bs-tertiary-bg);
+  border-color: var(--bs-border-color-translucent);
+}
+
+/* download button: accent+ filled, no border */
+.footer-download {
+  background: var(--pg-accent-hover);
+  border: none;
+  color: #fff;
+}
+
+.footer-download:hover {
+  background: var(--pg-accent);
+  border: none;
+  color: #fff;
+}
+
+.footer-close {
+  margin-left: auto;
+}
+
+.footer-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bs-secondary-color);
+}
+
+.footer-speed select {
+  background: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 3px 6px;
+  font-size: 0.85rem;
+}
+
+/* bottom-sheet handle (sheet mode only) */
+.sheet-handle {
+  display: none;
+}
+
+:host(.sheet) .sheet-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+  touch-action: none;
+}
+
+.sheet-grabber {
+  width: 42px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bs-secondary-color);
 }
 
 .row {
   margin-left: 0;
   margin-right: 0;
-  padding: 10px 16px 10px 16px;
+  padding: 8px 14px;
 }
 
 .details-icon {
-  font-size: x-large;
+  font-size: 1.25rem;
 }
 
 .details-main {
-  font-size: large;
+  font-size: 0.95rem;
 }
 
 .details-sub {
   padding: 0;
-  font-size: small;
+  font-size: 0.75rem;
 }
 
 .details-sub div {
@@ -29,6 +121,84 @@
 
 .caption-body {
   white-space: pre-wrap;
+}
+
+/* AI generation metadata section */
+.ai-icon {
+  color: var(--pg-accent);
+}
+
+.ai-source {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pg-accent);
+  margin-bottom: 6px;
+}
+
+.ai-block {
+  margin-bottom: 8px;
+}
+
+.ai-label {
+  font-size: 0.7rem;
+  color: var(--bs-secondary-color);
+}
+
+.ai-text {
+  font-size: 0.82rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 10px;
+  margin-top: 4px;
+}
+
+.ai-pair {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-pair-label {
+  font-size: 0.68rem;
+  color: var(--bs-secondary-color);
+}
+
+.ai-pair-value {
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+
+/* status card shown in AI mode when there is no AI section to display */
+.ai-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 10px;
+  background: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+  font-size: 0.85rem;
+}
+
+.ai-card ng-icon {
+  color: var(--pg-accent);
+  font-size: 1.1rem;
+  flex: 0 0 auto;
+}
+
+.ai-card-empty {
+  color: var(--bs-secondary-color);
+}
+
+.ai-card-empty ng-icon {
+  color: var(--bs-secondary-color);
 }
 
 .yaga-map {

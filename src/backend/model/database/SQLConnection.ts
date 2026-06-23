@@ -26,6 +26,7 @@ import {MDFileEntity} from './enitites/MDFileEntity';
 import {ProjectedDirectoryCacheEntity} from './enitites/ProjectedDirectoryCacheEntity';
 import {ProjectedPersonCacheEntity} from './enitites/person/ProjectedPersonCacheEntity';
 import {ProjectedAlbumCacheEntity} from './enitites/album/ProjectedAlbumCacheEntity';
+import {FavoriteFolderEntity} from './enitites/FavoriteFolderEntity';
 
 const LOG_TAG = '[SQLConnection]';
 
@@ -46,6 +47,7 @@ export class SQLConnection {
     SharingEntity,
     AlbumBaseEntity,
     SavedSearchEntity,
+    FavoriteFolderEntity,
     VersionEntity,
     // projection-aware cache entries
     ProjectedDirectoryCacheEntity,

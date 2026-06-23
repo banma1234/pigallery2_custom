@@ -33,6 +33,10 @@ export class GalleryCacheService {
   private static readonly VERSION = 'VERSION';
   private static readonly SLIDESHOW_SPEED = 'SLIDESHOW_SPEED';
   private static THEME_MODE = 'THEME_MODE';
+  private static AI_MODE = 'AI_MODE';
+  // global (not per-folder) sorting/grouping selection
+  private static GLOBAL_SORTING = 'GLOBAL_SORTING';
+  private static GLOBAL_GROUPING = 'GLOBAL_GROUPING';
 
   constructor(private versionService: VersionService) {
     // if it was a forced reload not a navigation, clear cache
@@ -399,6 +403,47 @@ export class GalleryCacheService {
     try {
       const key = GalleryCacheService.THEME_MODE;
       localStorage.setItem(key, ThemeModes[mode]);
+    } catch (e) {
+      this.reset();
+      console.error(e);
+    }
+  }
+
+  getGlobalSorting(): SortingMethod | null {
+    const tmp = localStorage.getItem(GalleryCacheService.GLOBAL_SORTING);
+    return tmp != null ? JSON.parse(tmp) : null;
+  }
+
+  setGlobalSorting(sorting: SortingMethod): void {
+    try {
+      localStorage.setItem(GalleryCacheService.GLOBAL_SORTING, JSON.stringify(sorting));
+    } catch (e) {
+      this.reset();
+      console.error(e);
+    }
+  }
+
+  getGlobalGrouping(): GroupingMethod | null {
+    const tmp = localStorage.getItem(GalleryCacheService.GLOBAL_GROUPING);
+    return tmp != null ? JSON.parse(tmp) : null;
+  }
+
+  setGlobalGrouping(grouping: GroupingMethod): void {
+    try {
+      localStorage.setItem(GalleryCacheService.GLOBAL_GROUPING, JSON.stringify(grouping));
+    } catch (e) {
+      this.reset();
+      console.error(e);
+    }
+  }
+
+  getAIMode(): boolean {
+    return localStorage.getItem(GalleryCacheService.AI_MODE) === 'true';
+  }
+
+  setAIMode(enabled: boolean): void {
+    try {
+      localStorage.setItem(GalleryCacheService.AI_MODE, enabled ? 'true' : 'false');
     } catch (e) {
       this.reset();
       console.error(e);

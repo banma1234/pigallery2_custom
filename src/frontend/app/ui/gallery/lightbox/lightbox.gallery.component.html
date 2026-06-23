@@ -1,4 +1,5 @@
-<div [hidden]="!isVisible()" #root>
+<div [hidden]="!isVisible()" #root class="lightbox-root"
+     [style.left.px]="chromeLeft" [style.top.px]="chromeTop">
 
   <div class="blackCanvas"
        [style.opacity]="blackCanvasOpacity">
@@ -42,17 +43,28 @@
       [navigation]="navigation"
       (nextPhoto)="nextImage()"
       (previousPhoto)="prevImage()"
-      (toggleInfoPanel)="toggleInfoPanel()"
       (toggleFullScreen)="toggleFullscreen()"
       [photoFrameDim]="photoFrameDim"
       [mediaElement]="mediaElement">
     </app-lightbox-controls>
   </div>
 
+  <app-lightbox-filmstrip *ngIf="isOpen()"
+                          class="lightbox-filmstrip"
+                          [style.right.px]="infoPanelWidth"
+                          [style.width.px]="filmstripWidth"
+                          [photos]="filmstripPhotos"
+                          [activeIndex]="activeIndex"
+                          (select)="goToPhoto($event)">
+  </app-lightbox-filmstrip>
+
   <app-info-panel *ngIf="activePhoto && infoPanelVisible"
                   id="info-panel"
-                  [style.width.px]="infoPanelWidth"
+                  [sheet]="infoPanelSheet"
+                  [style.width.px]="infoPanelSheet ? null : infoPanelWidth"
                   [media]="activePhoto.gridMedia.media"
-                  (closed)="hideInfoPanel()">
+                  [downloadUrl]="downloadUrl"
+                  [downloadName]="downloadName"
+                  (requestClose)="hide()">
   </app-info-panel>
 </div>

@@ -10,12 +10,12 @@ import {Config} from '../../../../../../common/config/public/Config';
 import {SearchQueryTypes, TextSearch, TextSearchQueryMatchTypes,} from '../../../../../../common/entities/SearchQueryDTO';
 import {AuthenticationService} from '../../../../model/network/authentication.service';
 import {LightboxService} from '../lightbox.service';
+import {SiblingFolderService} from '../../sibling-folder.service';
 import {Utils} from '../../../../../../common/Utils';
 import {FileSizePipe} from '../../../../pipes/FileSizePipe';
 import {DatePipe, NgFor, NgIf} from '@angular/common';
 import {LightBoxTitleTexts} from '../../../../../../common/config/public/ClientConfig';
 import {NgIconComponent} from '@ng-icons/core';
-import {BsDropdownDirective, BsDropdownMenuDirective, BsDropdownToggleDirective} from 'ngx-bootstrap/dropdown';
 import {FormsModule} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {SearchQueryUtils} from '../../../../../../common/SearchQueryUtils';
@@ -28,9 +28,6 @@ import {SearchQueryUtils} from '../../../../../../common/SearchQueryUtils';
   imports: [
     NgIf,
     NgIconComponent,
-    BsDropdownDirective,
-    BsDropdownToggleDirective,
-    BsDropdownMenuDirective,
     FormsModule,
     NgFor,
     RouterLink,
@@ -70,7 +67,8 @@ export class ControlsLightboxComponent implements OnDestroy, OnChanges {
     public fullScreenService: FullScreenService,
     private authService: AuthenticationService,
     private fileSizePipe: FileSizePipe,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public siblingFolderService: SiblingFolderService
   ) {
     this.controllersDimmed = this.lightboxService.controllersDimmed;
     this.searchEnabled = this.authService.canSearch();
@@ -141,6 +139,23 @@ export class ControlsLightboxComponent implements OnDestroy, OnChanges {
     this.updateFaceContainerDim();
     if (this.slideShowRunning) {
       this.runSlideShow();
+    }
+    if (this.activePhoto) {
+      this.siblingFolderService.update(this.activePhoto.gridMedia.media).catch((): void => {
+        /* ignore */
+      });
+    }
+  }
+
+  goPrevFolder(): void {
+    if (this.activePhoto) {
+      this.siblingFolderService.goPrev(this.activePhoto.gridMedia.media);
+    }
+  }
+
+  goNextFolder(): void {
+    if (this.activePhoto) {
+      this.siblingFolderService.goNext(this.activePhoto.gridMedia.media);
     }
   }
 
@@ -248,10 +263,6 @@ export class ControlsLightboxComponent implements OnDestroy, OnChanges {
           this.nextMediaManuallyTriggered();
         }
         break;
-      case 'i':
-      case 'I':
-        this.toggleInfoPanel.emit();
-        break;
       case 'f':
       case 'F':
         this.toggleFullScreen.emit();
@@ -324,6 +335,15 @@ export class ControlsLightboxComponent implements OnDestroy, OnChanges {
       this.timerSub = null;
     }
     this.ctx = null;
+  }
+
+  // Clicking the media area: photos toggle fullscreen, videos play/pause.
+  onMediaClick(): void {
+    if (this.activePhoto && this.activePhoto.gridMedia.isVideo()) {
+      this.mediaElement.playPause();
+    } else {
+      this.toggleFullScreen.emit();
+    }
   }
 
   playClicked() {

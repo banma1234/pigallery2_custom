@@ -8,7 +8,8 @@ import {Thumbnail, ThumbnailManagerService,} from '../../thumbnailManager.servic
 import {QueryService} from '../../../../model/query.service';
 import {CoverPhotoDTO} from '../../../../../../common/entities/PhotoDTO';
 import { NgIf } from '@angular/common';
-import { IconComponent } from '../../../../icon.component';
+import {NgIconComponent} from '@ng-icons/core';
+import {FavoriteFolderService} from '../../../../model/favorite.service';
 
 @Component({
     selector: 'app-gallery-directory',
@@ -17,7 +18,7 @@ import { IconComponent } from '../../../../icon.component';
     imports: [
         RouterLink,
         NgIf,
-        IconComponent,
+        NgIconComponent,
     ]
 })
 export class GalleryDirectoryComponent implements OnInit, OnDestroy {
@@ -28,8 +29,19 @@ export class GalleryDirectoryComponent implements OnInit, OnDestroy {
   constructor(
       private thumbnailService: ThumbnailManagerService,
       private sanitizer: DomSanitizer,
-      public queryService: QueryService
+      public queryService: QueryService,
+      public favoriteService: FavoriteFolderService
   ) {
+  }
+
+  isFavorite(): boolean {
+    return this.favoriteService.isFavorite(this.getDirectoryPath());
+  }
+
+  toggleFavorite(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.favoriteService.toggle(this.getDirectoryPath(), this.directory.name);
   }
 
   public get SamplePhoto(): CoverPhotoDTO {

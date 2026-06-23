@@ -5,25 +5,28 @@
      [class.animate-navbar]="animateNavbar">
   <nav class="navbar navbar-expand bg-body">
     <div class="container-fluid">
-      <a class="navbar-brand d-none d-sm-block" [routerLink]="['/gallery']"
-         [queryParams]="queryService.getParams()">
-        <app-icon class="d-inline-block align-top me-1" [width]="30" [height]="30"></app-icon>
-        <strong class="d-none d-lg-inline-block">{{ title }}</strong>
-      </a>
+      <button class="sidebar-toggle-btn me-2" type="button"
+              (click)="toggleSidebar()"
+              aria-label="Toggle sidebar" i18n-aria-label>
+        <svg class="stb-logo" viewBox="0 0 64 64" role="img" aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="navBrandGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9b87f5"/>
+              <stop offset="1" stop-color="#7c66ef"/>
+            </linearGradient>
+          </defs>
+          <rect x="14" y="14" width="16" height="16" rx="4" fill="url(#navBrandGrad)"/>
+          <rect x="34" y="14" width="16" height="16" rx="4" fill="url(#navBrandGrad)" opacity=".5"/>
+          <rect x="14" y="34" width="16" height="16" rx="4" fill="url(#navBrandGrad)" opacity=".5"/>
+          <rect x="34" y="34" width="16" height="16" rx="4" fill="none" stroke="url(#navBrandGrad)" stroke-width="2.5"/>
+          <path d="M42 36 l1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 z" fill="url(#navBrandGrad)"/>
+        </svg>
+        <ng-icon class="stb-icon" name="tablerLayoutSidebar"></ng-icon>
+      </button>
       <div class="collapse navbar-collapse text-center" id="navbarCollapse" [collapse]="collapsed">
         <ul class="navbar-nav mb-0 me-2 text-lg-start d-none d-md-flex">
           <ng-container *ngFor="let link of navbarLinks">
-            <li class="nav-item" *ngIf="link.type === NavigationLinkTypes.albums && isAlbumsAvailable()">
-              <a class="nav-link" [routerLink]="['/albums']" [class.active]="isLinkActive('/albums')" i18n>Albums</a>
-            </li>
-            <li class="nav-item" *ngIf="link.type === NavigationLinkTypes.faces && isFacesAvailable()">
-              <a class="nav-link" [routerLink]="['/faces']" [class.active]="isLinkActive('/faces')" i18n>Faces</a>
-            </li>
-            <li class="nav-item" *ngIf="link.type === NavigationLinkTypes.gallery && isGalleryAvailable()">
-              <a class="nav-link"
-                 [routerLink]="['/gallery']"
-                 [queryParams]="queryService.getParams()" [class.active]="isLinkActive('/gallery')" i18n>Gallery</a>
-            </li>
             <li class="nav-item" *ngIf="link.type === NavigationLinkTypes.url && isCustomLinksAvailable()">
               <a class="nav-link" [href]="link.url" [class.active]="isLinkActive(link.url)">{{ link.name }}</a>
             </li>
@@ -89,51 +92,7 @@
                   <li class="nav-item d-xl-none" *ngIf="showShare">
                     <app-gallery-share [dropDownItem]="true"></app-gallery-share>
                   </li>
-                  <li role="menuitem" *ngIf="themesEnabled">
-                    <div class="dropdown-item bg-transparent">
-                      <button class="btn w-100 btn-secondary" (click)="themeService.toggleMode()">
-                        <ng-container [ngSwitch]="themeService.mode">
-                          <ng-container *ngSwitchCase="ThemeModes.light">
-                            <ng-icon name="ionSunnyOutline"></ng-icon>
-                            <ng-container i18n>Light</ng-container>
-                          </ng-container>
-                          <ng-container *ngSwitchCase="ThemeModes.dark">
-                            <ng-icon name="ionMoonOutline"></ng-icon>
-                            <ng-container i18n>Dark</ng-container>
-                          </ng-container>
-                          <ng-container *ngSwitchCase="ThemeModes.auto">
-                            <ng-icon name="ionMoonOutline"></ng-icon>
-                            <ng-icon name="ionSunnyOutline" style="margin-left: -0.3rem"></ng-icon>
-                            <ng-container i18n>Auto</ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </button>
-                    </div>
-                  </li>
-                  <hr/>
                   <ng-container *ngFor="let link of navbarLinks">
-                    <li class="nav-item d-md-none"
-                        *ngIf="link.type === NavigationLinkTypes.albums && isAlbumsAvailable()">
-                      <a class="dropdown-item" [routerLink]="['/albums']" [class.active]="isLinkActive('/albums')">
-                        <ng-icon name="ionAlbumsOutline"></ng-icon>
-                        <ng-container i18n>Albums</ng-container>
-                      </a>
-                    </li>
-                    <li class="nav-item d-md-none"
-                        *ngIf="link.type === NavigationLinkTypes.faces && isFacesAvailable()">
-                      <a class="dropdown-item" [routerLink]="['/faces']" [class.active]="isLinkActive('/faces')">
-                        <ng-icon name="ionPeopleOutline"></ng-icon>
-                        <ng-container i18n>Faces</ng-container>
-                      </a>
-                    </li>
-                    <li class="nav-item d-md-none" *ngIf="link.type === NavigationLinkTypes.gallery  && isGalleryAvailable()">
-                      <a class="dropdown-item"
-                         [routerLink]="['/gallery']"
-                         [queryParams]="queryService.getParams()" [class.active]="isLinkActive('/gallery')">
-                        <ng-icon name="ionImagesOutline"></ng-icon>
-                        <ng-container i18n>Gallery</ng-container>
-                      </a>
-                    </li>
                     <li class="nav-item d-md-none" *ngIf="link.type === NavigationLinkTypes.url  && isCustomLinksAvailable()">
                       <a class="dropdown-item" [href]="link.url" [class.active]="isLinkActive(link.url)">
                         <ng-icon name="ionLinkOutline"></ng-icon>

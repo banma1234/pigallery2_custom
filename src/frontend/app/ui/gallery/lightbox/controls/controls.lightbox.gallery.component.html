@@ -1,139 +1,16 @@
 <div id="controllers-container" #root>
-  <div [class.dim-controls]="controllersDimmed" class="controls-title controls-top-left-title"
-       [class.controls-nodim]="lightboxService.captionAlwaysOn"
-       *ngIf="TopLeftTitle || TopLeftSubtitle">
-    <div class="controls-title-text" *ngIf="TopLeftTitle">{{ TopLeftTitle }}</div>
-
-    <div class="controls-subtitle-text" *ngIf="TopLeftSubtitle">{{ TopLeftSubtitle }}</div>
+  <div class="controls controls-folder-nav" *ngIf="activePhoto"
+       [class.dim-controls]="controllersDimmed">
+    <button type="button" class="folder-nav-btn" [disabled]="!siblingFolderService.hasPrev"
+            (click)="goPrevFolder()" title="Previous folder" i18n-title>
+      <ng-icon name="ionChevronBackOutline"></ng-icon><span i18n>Prev folder</span>
+    </button>
+    <button type="button" class="folder-nav-btn" [disabled]="!siblingFolderService.hasNext"
+            (click)="goNextFolder()" title="Next folder" i18n-title>
+      <span i18n>Next folder</span><ng-icon name="ionChevronForwardOutline"></ng-icon>
+    </button>
   </div>
 
-
-  <div [class.dim-controls]="controllersDimmed"
-       class="controls controls-top">
-    <div class="controls-background rounded-start-bottom">
-      <div class="highlight control-button" (click)="toggleInfoPanel.emit()"
-           title="info key: i" i18n-title>
-        <ng-icon name="ionInformationOutline"></ng-icon>
-      </div>
-
-      <div *ngIf="fullScreenService.isFullScreenEnabled()"
-           class="highlight control-button"
-           (click)="toggleFullScreen.emit()"
-           title="toggle fullscreen, key: f" i18n-title>
-        <ng-icon size="0.85em"
-                 name="ionContractOutline"></ng-icon>
-      </div>
-
-      <div *ngIf="!fullScreenService.isFullScreenEnabled()"
-           class="highlight control-button"
-           (click)="toggleFullScreen.emit(true)"
-           title="toggle fullscreen, key: f" i18n-title>
-        <ng-icon size="0.85em"
-                 name="ionExpandOutline"></ng-icon>
-      </div>
-
-      <div class="btn-group" dropdown [insideClick]="true">
-        <button id="button-basic" dropdownToggle type="button"
-                class="border-0 highlight control-button"
-                data-bs-auto-close="outside"
-                aria-controls="dropdown-basic">
-          <ng-icon size="1.2em" name="ionMenuOutline"></ng-icon>
-        </button>
-        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right"
-            role="menu" aria-labelledby="button-basic">
-          <li role="menuitem">
-            <a *ngIf="activePhoto"
-               [href]="activePhoto.gridMedia.getOriginalMediaPath()"
-               [download]="activePhoto.gridMedia.media.name"
-               class="dropdown-item">
-              <ng-icon class="me-2"
-                       name="ionDownloadOutline" title="Download" i18n-title></ng-icon>
-              <span i18n>Download</span>
-              <small>(shift + D)</small>
-            </a>
-          </li>
-          <li role="menuitem"
-              dropdown>
-            <div class="dropdown-item">
-              <ng-icon class="me-2"
-                       name="ionTimerOutline" title="Download" i18n-title></ng-icon>
-              <span class="pe-2" i18n-title title="Slideshow playback speed" i18n>Slideshow speed:</span>
-              <select
-                class="form-select d-inline-block w-auto"
-                [(ngModel)]="lightboxService.slideshowSpeed">
-                <option *ngFor="let speed of playBackDurations" [value]="speed">{{ speed }}s</option>
-              </select>
-            </div>
-          </li>
-          <li role="menuitem">
-            <div class="dropdown-item d-flex justify-content-between  align-items-center
-">
-              <span title="key: c" i18n-title i18n>Always show captions</span>
-              <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="caption-switch"
-                       id="caption-switch"
-                       [(ngModel)]="lightboxService.captionAlwaysOn">
-              </div>
-            </div>
-          </li>
-          <li role="menuitem">
-            <div class="dropdown-item d-flex justify-content-between  align-items-center
-">
-              <span title="key: a" i18n-title i18n>Always show faces</span>
-              <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="faces-switch"
-                       id="faces-switch"
-                       [(ngModel)]="lightboxService.facesAlwaysOn">
-              </div>
-            </div>
-          </li>
-          <li role="menuitem">
-            <div class="dropdown-item d-flex justify-content-between  align-items-center
-">
-              <span title="key: l" i18n-title i18n>Loop Slideshow</span>
-              <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="loop-slideshow-switch"
-                       id="loop-slideshow-switch"
-                       [(ngModel)]="lightboxService.loopSlideshow">
-              </div>
-            </div>
-          </li>
-          <li
-            *ngIf="activePhoto && activePhoto.gridMedia.isVideo()"
-            role="menuitem">
-            <div class="dropdown-item d-flex justify-content-between  align-items-center
-">
-              <span title="key: l" i18n-title i18n>Loop videos</span>
-
-              <div class="form-check form-switch">
-                <input class="form-check-input"
-                       type="checkbox"
-                       role="switch"
-                       name="loop-videos-switch"
-                       id="loop-videos-switch"
-                       [(ngModel)]="lightboxService.loopVideos">
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="highlight control-button"
-           (click)="closeLightbox()"
-           title="close, key: Escape" i18n-title>
-        <ng-icon size="1.2em" name="ionCloseOutline"></ng-icon>
-      </div>
-    </div>
-  </div>
 
   <div id="swipeable-container"
        (swipeleft)="zoom == 1 && nextPhoto.emit()"
@@ -142,7 +19,7 @@
        (tap)="tap($event)"
        (pan)="pan($any($event))"
        (wheel)="wheel($event)"
-       (click)="mediaElement.playPause()">
+       (click)="onMediaClick()">
 
     <div class="faces-container"
          [style.top.px]="photoFrameDim.height/2 + drag.y"
@@ -200,15 +77,6 @@
       #canvas width="55px" height="55px"></canvas>
 
   </div>
-  <div [class.dim-controls]="controllersDimmed" class="controls-title controls-bottom-left-title"
-       [class.controls-nodim]="lightboxService.captionAlwaysOn"
-       *ngIf="BottomLeftTitle || BottomLeftSubtitle">
-    <div class="controls-title-text" *ngIf="BottomLeftTitle">{{ BottomLeftTitle }}</div>
-
-    <div class="controls-subtitle-text " *ngIf="BottomLeftSubtitle">{{ BottomLeftSubtitle }}</div>
-  </div>
-
-
   <div [class.dim-controls]="controllersDimmed" class="controls controls-zoom row mb-3" *ngIf="Zoom > 1">
     <div class="col-1 col-md-4">
       <ng-icon name="ionRemoveOutline" class="float-end highlight"

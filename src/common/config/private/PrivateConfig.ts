@@ -892,6 +892,12 @@ export class ServerJobConfig {
       new AfterJobTriggerConfig(DefaultsJobs[DefaultsJobs['GPX Compression']]),
       {indexedOnly: true}
     ),
+    new JobScheduleConfig(
+      DefaultsJobs[DefaultsJobs['AI Metadata']],
+      DefaultsJobs[DefaultsJobs['AI Metadata']],
+      new AfterJobTriggerConfig(DefaultsJobs[DefaultsJobs['Temp Folder Cleaning']]),
+      {indexedOnly: true}
+    ),
   ];
 }
 

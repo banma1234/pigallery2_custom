@@ -67,6 +67,40 @@
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+/* prev/next sibling-folder navigation (top center) */
+.controls-folder-nav {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+}
+
+.folder-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.folder-nav-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.folder-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 
 
 .controls .control-button {

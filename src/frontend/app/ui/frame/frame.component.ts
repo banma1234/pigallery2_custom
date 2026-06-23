@@ -13,11 +13,11 @@ import {PageHelper} from '../../model/page.helper';
 import {BsDropdownDirective, BsDropdownMenuDirective, BsDropdownToggleDirective} from 'ngx-bootstrap/dropdown';
 import {LanguageComponent} from '../language/language.component';
 import {ThemeService} from '../../model/theme.service';
+import {SidebarService} from '../../model/sidebar.service';
 import {DeviceDetectorService} from 'ngx-device-detector';
 import {LoadingBarModule} from '@ngx-loading-bar/core';
-import {IconComponent} from '../../icon.component';
 import {CollapseDirective} from 'ngx-bootstrap/collapse';
-import {NgFor, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import {GallerySearchComponent} from '../gallery/search/search.gallery.component';
 import {GalleryShareComponent} from '../gallery/share/share.gallery.component';
 import {NgIconComponent} from '@ng-icons/core';
@@ -34,7 +34,6 @@ import {SearchQueryUtils} from '../../../../common/SearchQueryUtils';
   imports: [
     LoadingBarModule,
     RouterLink,
-    IconComponent,
     CollapseDirective,
     NgFor,
     NgIf,
@@ -45,8 +44,6 @@ import {SearchQueryUtils} from '../../../../common/SearchQueryUtils';
     BsDropdownDirective,
     BsDropdownToggleDirective,
     BsDropdownMenuDirective,
-    NgSwitch,
-    NgSwitchCase,
     FormsModule,
   ],
 })
@@ -87,10 +84,21 @@ export class FrameComponent {
     public themeService: ThemeService,
     private deviceService: DeviceDetectorService,
     public galleryService: GalleryService,
-    public uploadService: UploaderService
+    public uploadService: UploaderService,
+    public sidebarService: SidebarService
   ) {
     this.enableScrollUpButton = Config.Gallery.NavBar.showScrollUpButton === ScrollUpModes.always || (Config.Gallery.NavBar.showScrollUpButton === ScrollUpModes.mobileOnly && !this.deviceService.isDesktop());
     this.user = this.authService.user;
+  }
+
+  // One button hides the sidebar at any size: overlay on mobile,
+  // persistent collapse on desktop.
+  toggleSidebar(): void {
+    if (window.innerWidth < 768) {
+      this.sidebarService.toggle();
+    } else {
+      this.sidebarService.toggleCollapsed();
+    }
   }
 
   isAdmin(): boolean {

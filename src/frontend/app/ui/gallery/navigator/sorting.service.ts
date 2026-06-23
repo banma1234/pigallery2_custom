@@ -27,32 +27,28 @@ export class GallerySortingService {
     private rndService: SeededRandomService,
     private datePipe: DatePipe
   ) {
+    // Sorting/grouping is a global, browser-persisted selection: once the user
+    // picks one it applies to every folder/search and survives reloads.
     this.sorting = new BehaviorSubject(
-      {
+      this.galleryCacheService.getGlobalSorting() ?? {
         method: Config.Gallery.NavBar.SortingGrouping.defaultPhotoSortingMethod.method,
         ascending: Config.Gallery.NavBar.SortingGrouping.defaultPhotoSortingMethod.ascending
       }
     );
     this.grouping = new BehaviorSubject(
-      {
+      this.galleryCacheService.getGlobalGrouping() ?? {
         method: Config.Gallery.NavBar.SortingGrouping.defaultPhotoGroupingMethod.method,
         ascending: Config.Gallery.NavBar.SortingGrouping.defaultPhotoGroupingMethod.ascending
       }
     );
     this.galleryService.content.subscribe((c) => {
       if (c) {
-        const sort = this.galleryCacheService.getSorting(c);
-        const group = this.galleryCacheService.getGrouping(c);
-        if (sort !== null) {
-          this.sorting.next(sort);
-        } else {
-          this.sorting.next(this.getDefaultSorting(c));
-        }
-        if (group !== null) {
-          this.grouping.next(group);
-        } else {
-          this.grouping.next(this.getDefaultGrouping(c));
-        }
+        // keep the global selection if present, otherwise fall back to the
+        // per-content default (e.g. metaFile-defined or search default)
+        const sort = this.galleryCacheService.getGlobalSorting();
+        const group = this.galleryCacheService.getGlobalGrouping();
+        this.sorting.next(sort ?? this.getDefaultSorting(c));
+        this.grouping.next(group ?? this.getDefaultGrouping(c));
       }
     });
   }
@@ -90,40 +86,13 @@ export class GallerySortingService {
 
   setSorting(sorting: SortingMethod): void {
     this.sorting.next(sorting);
-    if (this.galleryService.content.value) {
-      if (
-        sorting !==
-        this.getDefaultSorting(this.galleryService.content.value)
-      ) {
-        this.galleryCacheService.setSorting(
-          this.galleryService.content.value,
-          sorting
-        );
-      } else {
-        this.galleryCacheService.removeSorting(
-          this.galleryService.content.value
-        );
-      }
-    }
+    // persist globally so the choice applies everywhere and across reloads
+    this.galleryCacheService.setGlobalSorting(sorting);
   }
 
   setGrouping(grouping: GroupingMethod): void {
     this.grouping.next(grouping);
-    if (this.galleryService.content.value) {
-      if (
-        grouping !==
-        this.getDefaultGrouping(this.galleryService.content.value)
-      ) {
-        this.galleryCacheService.setGrouping(
-          this.galleryService.content.value,
-          grouping
-        );
-      } else {
-        this.galleryCacheService.removeGrouping(
-          this.galleryService.content.value
-        );
-      }
-    }
+    this.galleryCacheService.setGlobalGrouping(grouping);
   }
 
   private sortMedia(sorting: SortingMethod | GroupingMethod, media: MediaDTO[]): void {

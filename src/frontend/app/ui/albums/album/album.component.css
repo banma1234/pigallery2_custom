@@ -28,7 +28,9 @@ a {
 }
 
 .photo-container {
-  border: 1px solid #333;
+  border: 1px solid var(--pg-card-border);
+  border-radius: var(--pg-card-radius);
+  overflow: hidden;
   width: 180px;
   height: 180px;
   background-color: var(--item-background);
@@ -52,8 +54,8 @@ a {
 }
 
 .info {
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  background-color: var(--pg-overlay-bg);
+  color: var(--pg-overlay-text);
   font-size: medium;
   position: absolute;
   bottom: 0;
@@ -64,9 +66,9 @@ a {
 }
 
 a:hover .info {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--pg-overlay-bg-hover);
 }
 
 a:hover .photo-container {
-  border-color: #000;
+  border-color: var(--pg-card-border-hover);
 }

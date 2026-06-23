@@ -8,22 +8,35 @@ import {Subscription} from 'rxjs';
 import {NavigationService} from './model/navigation.service';
 import {ThemeService} from './model/theme.service';
 import { RouterOutlet } from '@angular/router';
+import {AsyncPipe} from '@angular/common';
+import {SidebarComponent} from './ui/sidebar/sidebar.component';
+import {SidebarService} from './model/sidebar.service';
 
 @Component({
     selector: 'app-pi-gallery2',
     template: `
-    <router-outlet></router-outlet>`,
-    imports: [RouterOutlet]
+    <app-sidebar></app-sidebar>
+    <div class="app-content-shell" [class.with-sidebar]="showSidebar && !(sidebarService.collapsed | async)">
+      <router-outlet></router-outlet>
+    </div>`,
+    imports: [RouterOutlet, SidebarComponent, AsyncPipe]
 })
 export class AppComponent implements OnInit, OnDestroy {
   private subscription: Subscription = null;
+
+  // Reserve the left sidebar gutter only once a user context exists
+  // (keeps the login page centered).
+  get showSidebar(): boolean {
+    return !Config.Users.authenticationRequired || this.authenticationService.isAuthenticated();
+  }
 
   constructor(
     private authenticationService: AuthenticationService,
     private shareService: ShareService,
     private navigation: NavigationService,
     private title: Title,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    public sidebarService: SidebarService
   ) {
     themeService.init();
   }

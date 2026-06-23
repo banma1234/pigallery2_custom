@@ -20,6 +20,7 @@ import {PiTitleService} from '../../../model/pi-title.service';
 import {NgFor, NgIf} from '@angular/common';
 import {NgIconComponent} from '@ng-icons/core';
 import {InfoPanelLightboxComponent} from './infopanel/info-panel.lightbox.gallery.component';
+import {FilmstripLightboxComponent} from './filmstrip/filmstrip.lightbox.gallery.component';
 import {LightboxService} from './lightbox.service';
 
 export enum LightboxStates {
@@ -40,6 +41,7 @@ export enum LightboxStates {
     NgFor,
     ControlsLightboxComponent,
     InfoPanelLightboxComponent,
+    FilmstripLightboxComponent,
   ]
 })
 export class GalleryLightboxComponent implements OnDestroy, OnInit {
@@ -55,6 +57,12 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
   public status: LightboxStates = LightboxStates.Closed;
   public infoPanelVisible = false;
   public infoPanelWidth = 0;
+  public infoPanelSheet = false;
+  public filmstripWidth = 0;
+  // offsets so the detail view sits inside the app chrome (sidebar + navbar);
+  // both are 0 in browser fullscreen.
+  public chromeLeft = 0;
+  public chromeTop = 0;
   public animating = false;
   public photoFrameDim = {width: 1, height: 1, aspect: 1};
   public videoSourceError = false;
@@ -121,6 +129,27 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
     } else {
       this.fullScreenService.showFullScreen(this.root.nativeElement);
     }
+  }
+
+  // --- filmstrip (right rail) support ---
+  get filmstripPhotos(): GalleryPhotoComponent[] {
+    return this.gridPhotoQL ? this.gridPhotoQL.toArray() : [];
+  }
+
+  get activeIndex(): number {
+    return this.activePhotoId;
+  }
+
+  public goToPhoto(index: number): void {
+    this.navigateToPhoto(index);
+  }
+
+  get downloadUrl(): string {
+    return this.activePhoto ? this.activePhoto.gridMedia.getOriginalMediaPath() : null;
+  }
+
+  get downloadName(): string {
+    return this.activePhoto ? this.activePhoto.gridMedia.media.name : null;
   }
 
   ngOnInit(): void {
@@ -221,6 +250,12 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
     }
   }
 
+  @HostListener('document:fullscreenchange')
+  onFullscreenChange(): void {
+    // entering/leaving fullscreen changes the available chrome offsets
+    this.onResize();
+  }
+
   public nextImage(): void {
     if (this.activePhotoId + 1 < this.gridPhotoQL.length) {
       this.navigateToPhoto(this.activePhotoId + 1);
@@ -241,6 +276,8 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
       this.controls.resetZoom();
     }
     this.status = LightboxStates.Opening;
+    // refresh chrome offsets / panel widths against the current layout
+    this.updatePhotoFrameDim();
     const selectedPhoto = this.findPhotoComponent(photo);
     if (selectedPhoto === null) {
       throw new Error('Can\'t find Photo');
@@ -461,18 +498,59 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
   }
 
   private updatePhotoFrameDim = (): void => {
+    // sidebar + filmstrip from tablet up (>=768); metadata panel only on
+    // desktop (>=1024) where there is room for it.
+    const hasSidebar = window.innerWidth >= 768;
+    const docked = window.innerWidth >= 1024; // >=1024 right-docked panel, below = bottom sheet
+    const fullscreen = this.fullScreenService.isFullScreenEnabled();
+
+    // In the detail view keep the app chrome (sidebar + navbar) visible by
+    // confining the lightbox to the content area. In fullscreen, no chrome.
+    this.chromeLeft = (hasSidebar && !fullscreen) ? this.getSidebarWidth() : 0;
+    this.chromeTop = !fullscreen ? this.getNavbarHeight() : 0;
+
+    // filmstrip from tablet up; metadata panel: docked (desktop) or bottom sheet
+    this.filmstripWidth = (hasSidebar && !fullscreen) ? 84 : 0;
+    this.infoPanelVisible = !fullscreen;
+    this.infoPanelSheet = !docked;
+    // only the docked panel reserves horizontal space; the sheet overlays the bottom
+    this.infoPanelWidth = (docked && !fullscreen) ? this.getInfoPanelWidth() : 0;
+
+    const availWidth = window.innerWidth - this.chromeLeft;
     this.photoFrameDim = {
       width: Math.max(
-        window.innerWidth - this.infoPanelWidth,
+        availWidth - this.infoPanelWidth - this.filmstripWidth,
         0
       ),
-      height: window.innerHeight,
+      height: Math.max(window.innerHeight - this.chromeTop, 0),
       aspect: 0
     };
     this.photoFrameDim.aspect =
       Math.round((this.photoFrameDim.width / this.photoFrameDim.height) * 100) /
       100;
   };
+
+  private getSidebarWidth(): number {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--pg-sidebar-width');
+    const n = parseInt(v, 10);
+    return isNaN(n) ? 220 : n;
+  }
+
+  private getNavbarHeight(): number {
+    const el = document.querySelector('.navbar-container') as HTMLElement;
+    if (!el) {
+      return 0;
+    }
+    return Math.max(0, Math.round(el.getBoundingClientRect().bottom));
+  }
+
+  private getInfoPanelWidth(): number {
+    let width = Math.min(400, Math.ceil(window.innerWidth + 1));
+    if ((window.innerWidth - width) < width * 0.3) {
+      width = Math.ceil(window.innerWidth + 1);
+    }
+    return width;
+  }
 
   private navigateToPhoto(photoIndex: number): void {
     this.router
@@ -529,8 +607,6 @@ export class GalleryLightboxComponent implements OnDestroy, OnInit {
       this.activePhotoId = null;
       this.overlayService.hideOverlay('lightbox');
     });
-
-    this.hideInfoPanel(false);
   }
 
   private updateActivePhoto(photoIndex: number, resize = true): void {
