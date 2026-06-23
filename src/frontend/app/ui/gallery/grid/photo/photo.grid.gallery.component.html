@@ -22,6 +22,11 @@
     LIVE
   </div>
 
+  <!-- AI-generated badge (top-right, mirrors the folder favorite position) -->
+  <div *ngIf="isAI" class="ai-badge" title="AI generated" i18n-title>
+    <ng-icon name="tablerSparkles"></ng-icon><span>AI</span>
+  </div>
+
   <!-- Media buttons -->
   <div class="media-buttons" *ngIf="mediaButtons.length > 0">
     <button *ngFor="let button of mediaButtons"
@@ -37,41 +42,5 @@
            [innerHtml]="button.svgIcon.items | safeHtml">
       </svg>
     </button>
-  </div>
-
-
-  <!--Info box -->
-  <div class="info rounded-bottom"
-       *ngIf="infoBarVisible">
-    <div class="photo-name">{{Title}}</div>
-
-    <div class="photo-position" *ngIf="gridMedia.hasPositionData()">
-      <ng-icon name="ionLocationOutline"></ng-icon>
-      <ng-template [ngIf]="getPositionText()">
-        <a [routerLink]="['/search', getPositionSearchQuery()]"
-           *ngIf="searchEnabled">{{getPositionText()}}</a>
-        <span *ngIf="!searchEnabled">{{getPositionText()}}</span>
-      </ng-template>
-    </div>
-
-    <div class="photo-keywords" *ngIf="keywords">
-      <ng-template ngFor let-keyword [ngForOf]="keywords" let-last="last">
-        <a *ngIf="searchEnabled"
-           [routerLink]="['/search', getTextSearchQuery(keyword.value,keyword.type)]" [ngSwitch]="keyword.type">
-          <ng-template [ngSwitchCase]="SearchQueryTypes.keyword">#</ng-template><!--
-       -->
-          <ng-template [ngSwitchCase]="SearchQueryTypes.person">
-            <ng-icon name="ionPersonOutline"></ng-icon>
-          </ng-template><!--
-       -->{{keyword.value}}</a>
-        <span *ngIf="!searchEnabled" [ngSwitch]="keyword.type">
-          <ng-template [ngSwitchCase]="SearchQueryTypes.keyword">#</ng-template><!--
-       --><ng-template [ngSwitchCase]="SearchQueryTypes.person"><ng-icon
-          name="ionPersonOutline"></ng-icon></ng-template><!--
-       -->{{keyword.value}}</span>
-        <ng-template [ngIf]="!last">,&#160;</ng-template>
-      </ng-template>
-
-    </div>
   </div>
 </div>

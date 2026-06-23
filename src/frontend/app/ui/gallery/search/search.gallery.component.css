@@ -6,14 +6,93 @@ form {
   line-height: 0;
 }
 
-@media screen and ( min-width: 1200px) {
-  .search-field {
-    max-width: 400px;
-  }
+/* let the field fill the (capped) pill, text left-aligned */
+.search-field {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-@media screen and ( min-width: 1400px) {
-  .search-field {
-    max-width: 500px;
-  }
+.search-field ::ng-deep .search-text {
+  text-align: left;
+}
+
+/* YouTube-style rounded search pill: capped width, right-aligned */
+.navbar-form .input-group {
+  background: var(--bs-secondary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 999px;
+  max-width: 520px;
+  margin-left: auto;
+  align-items: stretch;
+  min-height: 42px;
+  overflow: hidden;
+}
+
+/* the embedded field fills the pill height and centers its content */
+.search-field,
+.search-field ::ng-deep .input-group {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-form .input-group:focus-within {
+  border-color: var(--pg-accent);
+}
+
+/* make the embedded search field transparent/borderless inside the pill */
+.search-field,
+.search-field ::ng-deep .input-group {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.search-field ::ng-deep .search-text,
+.search-field ::ng-deep .search-hint {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.search-field ::ng-deep .search-text,
+.search-field ::ng-deep .search-hint {
+  color: var(--bs-body-color);
+  padding-left: 16px;
+  height: 40px;
+  line-height: 40px;
+}
+
+/* keep the absolutely-positioned hint aligned with the visible input */
+.search-field ::ng-deep .search-hint {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* magnifier + advanced buttons fill pill height and center their icons */
+.navbar-form .input-group > .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* action buttons (magnifier + advanced) as segments of the pill */
+.navbar-form .input-group > .btn {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--bs-secondary-color);
+}
+
+.navbar-form .input-group > .btn:hover {
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+}
+
+.navbar-form .input-group > .btn:first-of-type {
+  border-left: 1px solid var(--bs-border-color);
+}
+
+.navbar-form .input-group > .btn:last-of-type {
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
 }
