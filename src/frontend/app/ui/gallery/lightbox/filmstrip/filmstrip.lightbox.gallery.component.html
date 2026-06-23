@@ -1,0 +1,10 @@
+<div class="filmstrip">
+  <button class="film-thumb"
+          *ngFor="let p of photos; let i = index; trackBy: trackByIndex"
+          type="button"
+          [class.active]="i === activeIndex"
+          (click)="select.emit(i)"
+          aria-label="Go to photo" i18n-aria-label>
+    <img *ngIf="p.thumbnail?.Available" [src]="p.thumbnail.Src" alt=""/>
+  </button>
+</div>

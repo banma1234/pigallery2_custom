@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.filmstrip {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 8px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.film-thumb {
+  flex: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.film-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.film-thumb.active {
+  outline: 2px solid var(--pg-accent, #9b87f5);
+  outline-offset: -2px;
+}

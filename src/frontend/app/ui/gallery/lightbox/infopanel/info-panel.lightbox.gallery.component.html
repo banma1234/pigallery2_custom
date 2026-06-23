@@ -1,8 +1,44 @@
+<div class="sheet-handle" *ngIf="sheet" (click)="toggleSheet()"
+     (swipeup)="sheetExpanded = true" (swipedown)="sheetExpanded = false"
+     aria-label="Toggle details" i18n-aria-label>
+  <span class="sheet-grabber"></span>
+</div>
 <div class="content d-flex flex-column bg-body">
   <div class="modal-header">
     <h2 class="modal-title" i18n>Info</h2>
-    <button type="button" class="btn-close" (click)="close()" aria-label="Close">
-    </button>
+  </div>
+
+  <div class="row ai-row" *ngIf="aiVisible" title="AI generation parameters" i18n-title>
+    <div class="col-1 ps-0">
+      <ng-icon class="details-icon ai-icon" name="tablerSparkles"></ng-icon>
+    </div>
+    <div class="col-11">
+      <div class="ai-source">{{ aiSourceLabel }}</div>
+      <div class="ai-block" *ngIf="aiPrompt">
+        <div class="ai-label" i18n>Prompt</div>
+        <div class="ai-text">{{ aiPrompt }}</div>
+      </div>
+      <div class="ai-block" *ngIf="aiNegative">
+        <div class="ai-label" i18n>Negative prompt</div>
+        <div class="ai-text">{{ aiNegative }}</div>
+      </div>
+      <div class="ai-grid">
+        <div class="ai-pair" *ngFor="let f of aiFields">
+          <span class="ai-pair-label">{{ f.label }}</span>
+          <span class="ai-pair-value">{{ f.value }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-card ai-card-empty" *ngIf="aiNotGenerated">
+    <ng-icon name="tablerSparkles"></ng-icon>
+    <span i18n>Not an AI-generated image</span>
+  </div>
+
+  <div class="ai-card" *ngIf="aiNoMetadata">
+    <ng-icon name="tablerSparkles"></ng-icon>
+    <span i18n>AI-generated image (no metadata found)</span>
   </div>
 
   <div class="row" *ngIf="media.metadata.caption || media.metadata.title" title="Title and description of the media"
@@ -237,4 +273,21 @@
     </div>
   </div>
 
+</div>
+
+<div class="panel-footer bg-body">
+  <a *ngIf="downloadUrl" class="footer-btn footer-download" [href]="downloadUrl" [download]="downloadName"
+     title="Download (shift + D)" i18n-title>
+    <ng-icon name="ionDownloadOutline"></ng-icon>
+  </a>
+  <div class="footer-speed" title="Slideshow speed" i18n-title>
+    <ng-icon name="ionTimerOutline"></ng-icon>
+    <select [(ngModel)]="lightboxService.slideshowSpeed">
+      <option *ngFor="let speed of playBackDurations" [value]="speed">{{ speed }}s</option>
+    </select>
+  </div>
+  <button type="button" class="footer-btn footer-close" (click)="requestClose.emit()"
+          title="close, key: Escape" i18n-title>
+    <ng-icon name="ionCloseOutline"></ng-icon>
+  </button>
 </div>
