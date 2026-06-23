@@ -8,7 +8,7 @@
   "main": "./src/backend/index.js",
   "bin": "./src/backend/index.js",
   "scripts": {
-    "build": "tsc && gulp build-prod",
+    "build": "tsc && gulp build-prod --languages=en,ko",
     "build-en": "tsc && gulp build-prod --languages=en",
     "create-release": "gulp create-release",
     "build-backend": "tsc",
@@ -80,6 +80,7 @@
     "@bluehalo/ngx-leaflet-markercluster": "19.1.0",
     "@ng-icons/core": "31.4.0",
     "@ng-icons/ionicons": "31.4.0",
+    "@ng-icons/tabler-icons": "31.4.0",
     "@ngx-loading-bar/core": "7.0.0",
     "@types/adm-zip": "0.5.7",
     "@types/archiver": "6.0.3",
