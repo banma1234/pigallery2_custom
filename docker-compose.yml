@@ -12,10 +12,6 @@ services:
       dockerfile: Dockerfile
     image: pigallery2-custom:latest
     container_name: pigallery2
-    deploy:
-      resources:
-        limits:
-          memory: 3G   # 1GB 미만도 동작하나 GC가 잦아져 느려짐
     environment:
       - NODE_ENV=production   # 전체 디버그 로그가 필요하면 'debug'
       - TZ=Asia/Seoul         # 컨테이너 타임존 (날짜 그룹/표시 기준)
