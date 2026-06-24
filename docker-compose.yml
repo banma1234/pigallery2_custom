@@ -1,0 +1,32 @@
+# PiGallery2 홈랩 배포용 compose (Ubuntu VM + Docker + NAS).
+#   사용: docker compose up -d --build
+#
+# 중요:
+#  - DB(SQLite)는 반드시 로컬 디스크 볼륨(db-data)에 둔다. NFS 위에 두면
+#    파일 락 문제로 손상/오류가 발생할 수 있다.
+#  - 사진은 NAS를 VM에 먼저 마운트(NFS)한 뒤, 그 경로를 읽기 전용으로 바인드한다.
+services:
+  pigallery2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pigallery2-custom:latest
+    container_name: pigallery2
+    deploy:
+      resources:
+        limits:
+          memory: 3G   # 1GB 미만도 동작하나 GC가 잦아져 느려짐
+    environment:
+      - NODE_ENV=production   # 전체 디버그 로그가 필요하면 'debug'
+      - TZ=Asia/Seoul         # 컨테이너 타임존 (날짜 그룹/표시 기준)
+    volumes:
+      - ./data/config:/app/data/config          # 설정(config.json)·확장
+      - db-data:/app/data/db                    # SQLite DB (로컬 디스크 전용!)
+      - /mnt/nas/private/images:/app/data/images:ro   # 호스트(NAS) 경로 : 컨테이너 경로 : 읽기전용
+      - ./data/tmp:/app/data/tmp                # 썸네일/트랜스코딩 캐시 (로컬 디스크 권장)
+    ports:
+      - "5000:80"   # http://<VM-IP>:5000 — 외부 노출은 역방향 프록시/WireGuard 뒤에서
+    restart: always
+
+volumes:
+  db-data:
