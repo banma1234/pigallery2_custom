@@ -11,6 +11,13 @@ if (forcedDebug === true) {
   );
 }
 
+// Colorize level tags only for interactive terminals. In containers/pipes
+// (non-TTY) or when NO_COLOR is set, emit plain tags so shipped logs stay
+// clean and greppable (e.g. rsyslog matching on [ERROR]).
+const useColor = !!process.stdout.isTTY && process.env['NO_COLOR'] === undefined;
+const lvl = (code: string, text: string): string =>
+  useColor ? `[\x1b[${code}m${text}\x1b[0m]` : `[${text}]`;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type LoggerArgs = (string | number | (() => string) | Record<any, unknown> | Error);
 export type LoggerFunction = (...args: LoggerArgs[]) => void;
@@ -50,39 +57,39 @@ export class Logger {
     if (!forcedDebug && Config.Server.Log.level < LogLevel.silly) {
       return;
     }
-    Logger.log(`[\x1b[35mSILLY\x1b[0m]`, console.debug, ...args);
+    Logger.log(lvl('35', 'SILLY'), console.debug, ...args);
   }
 
   public static debug(...args: LoggerArgs[]): void {
     if (!forcedDebug && Config.Server.Log.level < LogLevel.debug) {
       return;
     }
-    Logger.log(`[\x1b[34mDEBUG\x1b[0m]`, console.debug, ...args);
+    Logger.log(lvl('34', 'DEBUG'), console.debug, ...args);
   }
 
   public static verbose(...args: LoggerArgs[]): void {
     if (!forcedDebug && Config.Server.Log.level < LogLevel.verbose) {
       return;
     }
-    Logger.log(`[\x1b[36mVERBS\x1b[0m]`, console.debug, ...args);
+    Logger.log(lvl('36', 'VERBS'), console.debug, ...args);
   }
 
   public static info(...args: LoggerArgs[]): void {
     if (!forcedDebug && Config.Server.Log.level < LogLevel.info) {
       return;
     }
-    Logger.log(`[\x1b[32mINFO_\x1b[0m]`, console.log, ...args);
+    Logger.log(lvl('32', 'INFO_'), console.log, ...args);
   }
 
   public static warn(...args: LoggerArgs[]): void {
     if (!forcedDebug && Config.Server.Log.level < LogLevel.warn) {
       return;
     }
-    Logger.log(`[\x1b[33mWARN_\x1b[0m]`, console.warn, ...args);
+    Logger.log(lvl('33', 'WARN_'), console.warn, ...args);
   }
 
   public static error(...args: LoggerArgs[]): void {
-    Logger.log(`[\x1b[31mERROR\x1b[0m]`, console.error, ...args);
+    Logger.log(lvl('31', 'ERROR'), console.error, ...args);
   }
 
   public static logLevelForError(e: ErrorCodes): LoggerFunction {
