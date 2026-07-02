@@ -15,6 +15,15 @@ services:
     environment:
       - NODE_ENV=production   # 전체 디버그 로그가 필요하면 'debug'
       - TZ=Asia/Seoul         # 컨테이너 타임존 (날짜 그룹/표시 기준)
+      - default-Server-Log-level=verbose  # API 요청 로그 포함(접근 추적). 소음 크면 info, 심층 디버깅은 debug
+      - default-Server-Log-sqlLevel=error # none|error|all (all 은 모든 쿼리 기록, 매우 시끄러움)
+    # 앱 로그(stdout)를 log LXC(10.20.20.55)의 rsyslog 로 전송.
+    # 주의: syslog 드라이버로 바꾸면 'docker logs'/'docker compose logs' 는 안 됨(로그는 log 서버에서 확인).
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://10.20.20.55:514"
+        tag: pigallery2
     volumes:
       - ./data/config:/app/data/config          # 설정(config.json)·확장
       - db-data:/app/data/db                    # SQLite DB (로컬 디스크 전용!)
